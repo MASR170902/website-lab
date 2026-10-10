@@ -41,9 +41,20 @@ export function SiteHeader() {
             priority
             className="h-[46px] w-auto max-w-[78px] object-contain sm:h-[54px] sm:max-w-[92px]"
           />
+          <span
+            aria-hidden="true"
+            className="hidden h-9 w-px bg-slate-200 lg:block"
+          />
+          <span className="hidden max-w-[155px] text-[11px] font-semibold leading-[1.35] tracking-[0.01em] text-ink lg:flex lg:flex-col">
+            <span>Programming &amp; Network</span>
+            <span>Security Lab</span>
+            <span className="text-[10px] font-medium text-slate-500">
+              Telkom University Purwokerto
+            </span>
+          </span>
         </a>
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-8 md:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-5 xl:gap-7 md:flex">
           {navigation.map((item) => (
             <a
               key={item.label}
