@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,9 +15,41 @@ const navigation = [
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string | null>(null);
+
+  useEffect(() => {
+    const sectionIds = [...navigation.map((item) => item.href.slice(1)), "contact"];
+    let frame = 0;
+
+    const updateActiveSection = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        let current: string | null = null;
+        const headerBottom =
+          document.querySelector("header")?.getBoundingClientRect().bottom ?? 78;
+        const activationLine = headerBottom + 48;
+        for (const id of sectionIds) {
+          const section = document.getElementById(id);
+          if (section && section.getBoundingClientRect().top <= activationLine) {
+            current = id;
+          }
+        }
+        setActiveSection(current);
+      });
+    };
+
+    updateActiveSection();
+    window.addEventListener("scroll", updateActiveSection, { passive: true });
+    window.addEventListener("resize", updateActiveSection);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", updateActiveSection);
+      window.removeEventListener("resize", updateActiveSection);
+    };
+  }, []);
 
   return (
-    <header className="relative z-30 border-b border-slate-100 bg-white">
+    <header className="sticky top-0 z-30 border-b border-slate-100 bg-white">
       <div className="container-wide flex h-[78px] items-center justify-between">
         <a
           href="#"
@@ -59,7 +91,12 @@ export function SiteHeader() {
             <a
               key={item.label}
               href={item.href}
-              className="text-[13px] font-medium text-slate-600 transition-colors hover:text-ocean"
+              aria-current={activeSection === item.href.slice(1) ? "location" : undefined}
+              className={`rounded-full px-2.5 py-2 text-[13px] transition-colors ${
+                activeSection === item.href.slice(1)
+                  ? "bg-[#edf5f0] font-semibold text-ocean"
+                  : "font-medium text-slate-600 hover:text-ocean"
+              }`}
             >
               {item.label}
             </a>
@@ -69,9 +106,11 @@ export function SiteHeader() {
         <Button
           asChild
           variant="primary"
-          className="header-contact-button hidden md:inline-flex"
+          className={`header-contact-button hidden md:inline-flex ${
+            activeSection === "contact" ? "ring-2 ring-[#a8e5bd] ring-offset-2" : ""
+          }`}
         >
-          <a href="#contact">
+          <a href="#contact" aria-current={activeSection === "contact" ? "location" : undefined}>
             Get in Touch <ArrowUpRight size={15} />
           </a>
         </Button>
@@ -98,7 +137,12 @@ export function SiteHeader() {
                 key={item.label}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-3 py-3 text-sm font-medium text-slate-700 hover:bg-mist"
+                aria-current={activeSection === item.href.slice(1) ? "location" : undefined}
+                className={`rounded-lg px-3 py-3 text-sm ${
+                  activeSection === item.href.slice(1)
+                    ? "bg-[#edf5f0] font-semibold text-ocean"
+                    : "font-medium text-slate-700 hover:bg-mist"
+                }`}
               >
                 {item.label}
               </a>
@@ -106,7 +150,10 @@ export function SiteHeader() {
             <a
               href="#contact"
               onClick={() => setMenuOpen(false)}
-              className="mt-2 rounded-full bg-ink px-5 py-3 text-center text-sm font-semibold text-white"
+              aria-current={activeSection === "contact" ? "location" : undefined}
+              className={`mt-2 rounded-full px-5 py-3 text-center text-sm font-semibold text-white ${
+                activeSection === "contact" ? "bg-ocean" : "bg-ink"
+              }`}
             >
               Get in Touch
             </a>
