@@ -409,7 +409,12 @@ export default async function Home() {
             </h2>
             <p className="mt-3 text-sm text-slate-300">We would love to hear from students, researchers, and collaborators.</p>
           </div>
-          <Button asChild size="lg" className="shrink-0 bg-white text-ink hover:bg-emerald-50">
+          <Button
+            asChild
+            size="lg"
+            variant="light"
+            className="contact-cta-button shrink-0"
+          >
             <a href="mailto:pns-lab@example.edu">
               Get in touch <ArrowUpRight size={16} />
             </a>

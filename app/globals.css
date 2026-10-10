@@ -92,6 +92,21 @@ a {
   background-color: #e8f6ee;
 }
 
+.contact-cta-button {
+  border: 2px solid #fff;
+  background-color: #fff;
+  color: #172b3a;
+  opacity: 1;
+  filter: none;
+  backdrop-filter: none;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 24%);
+}
+
+.contact-cta-button:hover {
+  background-color: #e8f6ee;
+  color: #172b3a;
+}
+
 .network-grid {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
