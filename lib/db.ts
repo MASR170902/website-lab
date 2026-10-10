@@ -23,10 +23,47 @@ export interface NewsItem {
   href: string;
 }
 
+export interface OrganizationMember {
+  id: string;
+  group: OrganizationGroup;
+  name: string;
+  isLeader: boolean;
+  photo?: string;
+}
+
+export const ORGANIZATION_GROUPS = {
+  kaur: "Lab Head",
+  laboran: "Lab Assistant",
+  coordinator: "Lab Coordinator",
+  secretary: "Secretariat",
+  treasurer: "Treasury",
+  rnd: "R&D Division",
+  hrd: "Human Resources Division",
+  media: "Media & Creative Division",
+} as const;
+
+export type OrganizationGroup = keyof typeof ORGANIZATION_GROUPS;
+
+export function isOrganizationGroup(value: string): value is OrganizationGroup {
+  return Object.hasOwn(ORGANIZATION_GROUPS, value);
+}
+
+export const DEFAULT_ORGANIZATION_MEMBERS: OrganizationMember[] = [
+  { id: "org-kaur-lab", group: "kaur", name: "", isLeader: true },
+  { id: "org-laboran", group: "laboran", name: "", isLeader: true },
+  { id: "org-koordinator", group: "coordinator", name: "", isLeader: true },
+  { id: "org-sekretaris", group: "secretary", name: "", isLeader: true },
+  { id: "org-bendahara", group: "treasurer", name: "", isLeader: true },
+  { id: "org-rnd", group: "rnd", name: "", isLeader: true },
+  { id: "org-hrd", group: "hrd", name: "", isLeader: true },
+  { id: "org-media-creative", group: "media", name: "", isLeader: true },
+];
+
 export interface LabDatabase {
   researchAreas: Record<string, unknown>[];
   publications: Publication[];
   team: Record<string, unknown>[];
+  organizationMembers: OrganizationMember[];
   newsItems: NewsItem[];
 }
 
@@ -69,8 +106,73 @@ function isNewsItemArray(value: unknown): value is NewsItem[] {
   );
 }
 
+function isOrganizationMemberArray(value: unknown): value is OrganizationMember[] {
+  return (
+    isRecordArray(value) &&
+    value.every(
+      (item) =>
+        typeof item.id === "string" &&
+        typeof item.group === "string" &&
+        isOrganizationGroup(item.group) &&
+        typeof item.name === "string" &&
+        typeof item.isLeader === "boolean" &&
+        (item.photo === undefined || typeof item.photo === "string"),
+    )
+  );
+}
+
+function migrateOrganizationMembers(value: unknown): OrganizationMember[] | null {
+  if (isOrganizationMemberArray(value)) return value;
+  if (!isRecordArray(value)) return null;
+
+  const legacyGroups: Record<string, OrganizationGroup> = {
+    "org-kaur-lab": "kaur",
+    "org-laboran": "laboran",
+    "org-koordinator": "coordinator",
+    "org-sekretaris": "secretary",
+    "org-bendahara": "treasurer",
+    "org-rnd": "rnd",
+    "org-hrd": "hrd",
+    "org-media-creative": "media",
+  };
+
+  const migrated: OrganizationMember[] = [];
+  for (const item of value) {
+    if (
+      typeof item.id !== "string" ||
+      typeof item.name !== "string" ||
+      (item.photo !== undefined && typeof item.photo !== "string")
+    ) {
+      return null;
+    }
+    const group =
+      typeof item.group === "string" && isOrganizationGroup(item.group)
+        ? item.group
+        : legacyGroups[item.id];
+    if (!group) return null;
+
+    migrated.push({
+      id: item.id,
+      group,
+      name: item.name,
+      isLeader: typeof item.isLeader === "boolean" ? item.isLeader : true,
+      ...(typeof item.photo === "string" ? { photo: item.photo } : {}),
+    });
+  }
+  return migrated;
+}
+
 function parseDb(data: string): LabDatabase {
   const parsed: unknown = JSON.parse(data);
+  const organizationMembers =
+    typeof parsed === "object" &&
+    parsed !== null &&
+    "organizationMembers" in parsed
+      ? parsed.organizationMembers
+      : DEFAULT_ORGANIZATION_MEMBERS;
+  const normalizedOrganizationMembers =
+    migrateOrganizationMembers(organizationMembers);
+
   if (
     typeof parsed !== 'object' ||
     parsed === null ||
@@ -81,6 +183,7 @@ function parseDb(data: string): LabDatabase {
     !isRecordArray(parsed.researchAreas) ||
     !isPublicationArray(parsed.publications) ||
     !isRecordArray(parsed.team) ||
+    !normalizedOrganizationMembers ||
     !isNewsItemArray(parsed.newsItems)
   ) {
     throw new Error('The lab content database has an invalid format.');
@@ -90,6 +193,7 @@ function parseDb(data: string): LabDatabase {
     researchAreas: parsed.researchAreas,
     publications: parsed.publications,
     team: parsed.team,
+    organizationMembers: normalizedOrganizationMembers,
     newsItems: parsed.newsItems,
   };
 }
@@ -99,7 +203,13 @@ export function getDb(): LabDatabase {
     return parseDb(fs.readFileSync(dbPath, 'utf-8'));
   } catch (error) {
     if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
-      return { researchAreas: [], publications: [], team: [], newsItems: [] };
+      return {
+        researchAreas: [],
+        publications: [],
+        team: [],
+        organizationMembers: DEFAULT_ORGANIZATION_MEMBERS,
+        newsItems: [],
+      };
     }
     throw error;
   }

@@ -2,15 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ArrowUpRight, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
 
 const navigation = [
   { label: "About", href: "#about" },
   { label: "Research", href: "#research" },
+  { label: "Practicum", href: "#practicum" },
   { label: "Publications", href: "#publications" },
   { label: "Team", href: "#team" },
   { label: "News & Events", href: "#news" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export function SiteHeader() {
@@ -86,16 +87,20 @@ export function SiteHeader() {
           </span>
         </a>
 
-        <nav aria-label="Main navigation" className="hidden items-center gap-5 xl:gap-7 md:flex">
+        <nav aria-label="Main navigation" className="hidden items-center gap-2 xl:flex">
           {navigation.map((item) => (
             <a
               key={item.label}
               href={item.href}
               aria-current={activeSection === item.href.slice(1) ? "location" : undefined}
               className={`rounded-full px-2.5 py-2 text-[13px] transition-colors ${
-                activeSection === item.href.slice(1)
-                  ? "bg-[#edf5f0] font-semibold text-ocean"
-                  : "font-medium text-slate-600 hover:text-ocean"
+                item.href === "#contact"
+                  ? `header-contact-button px-3 font-semibold ${
+                      activeSection === "contact" ? "ring-2 ring-[#a8e5bd] ring-offset-2" : ""
+                    }`
+                  : activeSection === item.href.slice(1)
+                    ? "bg-[#edf5f0] font-semibold text-ocean"
+                    : "font-medium text-slate-600 hover:text-ocean"
               }`}
             >
               {item.label}
@@ -103,24 +108,12 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <Button
-          asChild
-          variant="primary"
-          className={`header-contact-button hidden md:inline-flex ${
-            activeSection === "contact" ? "ring-2 ring-[#a8e5bd] ring-offset-2" : ""
-          }`}
-        >
-          <a href="#contact" aria-current={activeSection === "contact" ? "location" : undefined}>
-            Get in Touch <ArrowUpRight size={15} />
-          </a>
-        </Button>
-
         <button
           type="button"
           aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-ink md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 text-ink xl:hidden"
         >
           {menuOpen ? <X size={19} /> : <Menu size={19} />}
         </button>
@@ -129,7 +122,7 @@ export function SiteHeader() {
       {menuOpen && (
         <nav
           aria-label="Mobile navigation"
-          className="absolute left-0 right-0 top-full border-t border-slate-100 bg-white px-5 py-5 shadow-lg md:hidden"
+          className="absolute left-0 right-0 top-full border-t border-slate-100 bg-white px-5 py-5 shadow-lg xl:hidden"
         >
           <div className="mx-auto flex max-w-[560px] flex-col gap-1">
             {navigation.map((item) => (
@@ -139,24 +132,18 @@ export function SiteHeader() {
                 onClick={() => setMenuOpen(false)}
                 aria-current={activeSection === item.href.slice(1) ? "location" : undefined}
                 className={`rounded-lg px-3 py-3 text-sm ${
-                  activeSection === item.href.slice(1)
-                    ? "bg-[#edf5f0] font-semibold text-ocean"
-                    : "font-medium text-slate-700 hover:bg-mist"
+                  item.href === "#contact"
+                    ? `mt-2 text-center font-semibold text-white ${
+                        activeSection === "contact" ? "bg-ocean" : "bg-ink"
+                      }`
+                    : activeSection === item.href.slice(1)
+                      ? "bg-[#edf5f0] font-semibold text-ocean"
+                      : "font-medium text-slate-700 hover:bg-mist"
                 }`}
               >
                 {item.label}
               </a>
             ))}
-            <a
-              href="#contact"
-              onClick={() => setMenuOpen(false)}
-              aria-current={activeSection === "contact" ? "location" : undefined}
-              className={`mt-2 rounded-full px-5 py-3 text-center text-sm font-semibold text-white ${
-                activeSection === "contact" ? "bg-ocean" : "bg-ink"
-              }`}
-            >
-              Get in Touch
-            </a>
           </div>
         </nav>
       )}

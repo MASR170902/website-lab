@@ -14,11 +14,12 @@ import {
   Network,
   Radio,
   ShieldCheck,
+  UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site-header";
 
-import { getDb } from "@/lib/db";
+import { getDb, ORGANIZATION_GROUPS } from "@/lib/db";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const iconMap: Record<string, any> = { Network, Fingerprint, Radio };
@@ -27,7 +28,7 @@ export default async function Home() {
   const db = getDb();
   const researchAreas = db.researchAreas;
   const publications = db.publications;
-  const team = db.team;
+  const organizationMembers = db.organizationMembers;
   const newsItems = db.newsItems;
 
   return (
@@ -238,6 +239,70 @@ export default async function Home() {
         </div>
       </section>
 
+      <section id="practicum" className="section-space bg-white">
+        <div className="container-wide">
+          <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-end">
+            <div>
+              <span className="eyebrow">Learn by doing</span>
+              <h2 className="mt-5 max-w-[500px] text-3xl font-semibold leading-tight tracking-[-0.045em] text-ink md:text-[42px]">
+                Practicum at PNS Lab
+              </h2>
+            </div>
+            <p className="max-w-[620px] text-sm leading-7 text-slate-600">
+              Turn concepts in programming and network security into practical
+              skills. The practicum emphasizes learning through guided,
+              hands-on work and a responsible approach to solving real-world
+              technical problems.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {[
+              {
+                number: "01",
+                title: "Build practical skills",
+                description:
+                  "Strengthen your foundations by working through practical programming and networking challenges.",
+              },
+              {
+                number: "02",
+                title: "Explore security",
+                description:
+                  "Learn to identify weaknesses and think critically about how systems can be made more secure.",
+              },
+              {
+                number: "03",
+                title: "Learn responsibly",
+                description:
+                  "Apply what you learn in a guided environment that values documentation, collaboration, and responsible practice.",
+              },
+            ].map((item) => (
+              <article
+                key={item.number}
+                className="rounded-2xl border border-slate-200 bg-mist p-7"
+              >
+                <span className="text-xs font-medium tracking-widest text-ocean">
+                  {item.number}
+                </span>
+                <h3 className="mt-5 text-lg font-semibold tracking-tight text-ink">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-[13px] leading-6 text-slate-600">
+                  {item.description}
+                </p>
+              </article>
+            ))}
+          </div>
+
+          <a
+            href="#contact"
+            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-leaf"
+          >
+            Ask about the practicum <ArrowRight size={15} />
+          </a>
+        </div>
+      </section>
+
       <section className="section-space bg-white">
         <div className="container-wide">
           <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
@@ -364,35 +429,215 @@ export default async function Home() {
         <div className="container-wide">
           <div className="grid gap-10 md:grid-cols-[0.8fr_1.2fr] md:items-end">
             <div>
-              <span className="eyebrow">People behind the research</span>
+              <span className="eyebrow">Organization Structure</span>
               <h2 className="mt-5 text-3xl font-semibold tracking-[-0.04em] text-ink md:text-[42px]">
-                A curious community.
+                Lab Leadership
               </h2>
             </div>
             <p className="max-w-[510px] text-sm leading-7 text-slate-600 md:justify-self-end">
-              Our lab is a collaborative space for faculty, researchers, and
-              students who want to make a meaningful contribution to network
-              security.
+              Meet the people behind the Programming and Network Security Lab.
+              Leadership names and photos are maintained by the lab administrator.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 md:grid-cols-3">
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {team.map((member: any) => (
-              <article key={member.title} className="team-card rounded-2xl border border-slate-200 p-6 transition-colors hover:border-[#bddbc9] md:p-7">
-                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl text-sm font-bold ${member.color}`}>
-                  {member.initials}
-                </div>
-                <div className="mt-8 flex items-center justify-between gap-3">
-                  <div>
-                    <h3 className="font-semibold text-ink">{member.title}</h3>
-                    <p className="mt-2 text-xs text-slate-500">{member.focus}</p>
+          {(() => {
+            const groups = {
+              kaur: organizationMembers.filter((member) => member.group === "kaur"),
+              laboran: organizationMembers.filter((member) => member.group === "laboran"),
+              coordinator: organizationMembers.filter((member) => member.group === "coordinator"),
+              secretary: organizationMembers.filter((member) => member.group === "secretary"),
+              treasurer: organizationMembers.filter((member) => member.group === "treasurer"),
+              rnd: organizationMembers.filter((member) => member.group === "rnd"),
+              hrd: organizationMembers.filter((member) => member.group === "hrd"),
+              media: organizationMembers.filter((member) => member.group === "media"),
+            };
+            const ordered = (members: typeof organizationMembers) =>
+              [...members].sort((first, second) => Number(second.isLeader) - Number(first.isLeader));
+            const renderPerson = (
+              member: (typeof organizationMembers)[number],
+              group: keyof typeof groups,
+            ) => (
+              <article
+                key={member.id}
+                className="flex w-[178px] shrink-0 flex-col items-center rounded-xl border border-slate-200 bg-white px-4 pb-4 pt-5 text-center shadow-[0_5px_18px_rgba(23,43,58,0.05)] transition-all hover:-translate-y-1 hover:border-[#bddbc9] hover:shadow-[0_10px_24px_rgba(23,43,58,0.1)]"
+              >
+                <div className="relative mb-3 h-[76px] w-[76px] rounded-full bg-gradient-to-br from-[#176b87] via-[#50a979] to-[#b7d9c4] p-[3px] shadow-[0_8px_20px_rgba(23,107,135,0.18)]">
+                  <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-[#f1f6f4]">
+                    {member.photo ? (
+                      <Image src={member.photo} alt={`Foto ${member.name || ORGANIZATION_GROUPS[group]}`} fill sizes="76px" className="object-cover" />
+                    ) : (
+                      <UserRound size={34} strokeWidth={1.4} className="text-[#8ba69a]" />
+                    )}
                   </div>
-                  <ArrowUpRight className="team-arrow text-slate-400" size={18} />
                 </div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ocean">
+                  {member.isLeader
+                    ? group === "secretary"
+                      ? "Lab Secretary"
+                      : group === "treasurer"
+                        ? "Lab Treasurer"
+                        : ["rnd", "hrd", "media"].includes(group)
+                          ? "Division Lead"
+                          : ORGANIZATION_GROUPS[group]
+                    : group === "secretary"
+                      ? "Secretariat Member"
+                      : group === "treasurer"
+                        ? "Treasury Member"
+                        : "STAFF"}
+                </p>
+                <p className={`mt-1 text-xs leading-5 ${member.name ? "text-slate-600" : "text-slate-400"}`}>
+                  {member.name || "Member name"}
+                </p>
               </article>
-            ))}
-          </div>
+            );
+            const groupWidths = (
+              lists: (typeof organizationMembers)[],
+            ) =>
+              lists.map((members) =>
+                Math.max(250, ordered(members).length * 178 + Math.max(0, ordered(members).length - 1) * 12 + 32),
+              );
+            const renderGroupPanel = (
+              group: keyof typeof groups,
+              members: typeof organizationMembers,
+            ) => {
+              const sortedMembers = ordered(members);
+              const leader = sortedMembers.find((member) => member.isLeader);
+              const staff = sortedMembers.filter((member) => !member.isLeader);
+              const hasStaffTree = ["rnd", "hrd", "media"].includes(group);
+
+              return (
+                <section
+                  className="relative rounded-2xl border border-slate-200 bg-[#f8faf9] p-4 shadow-[0_8px_24px_rgba(23,43,58,0.05)]"
+                  style={{ width: groupWidths([members])[0] }}
+                >
+                  <h3 className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.08em] text-ink">
+                    {ORGANIZATION_GROUPS[group]}
+                  </h3>
+                  {hasStaffTree ? (
+                    <div className="flex flex-col items-center">
+                      {leader && renderPerson(leader, group)}
+                      {staff.length > 0 && (
+                        <div
+                          className="relative mt-0 grid w-max items-start pt-8"
+                          style={{
+                            gridTemplateColumns: `repeat(${staff.length}, 178px)`,
+                            columnGap: "12px",
+                          }}
+                        >
+                          {staff.length > 1 && (
+                            <span
+                              aria-hidden="true"
+                              className="absolute top-4 h-[2px] bg-[#94a3b8]"
+                              style={{
+                                left: "89px",
+                                right: "89px",
+                              }}
+                            />
+                          )}
+                          {staff.map((member) => (
+                            <div key={member.id} className="relative">
+                              <span
+                                aria-hidden="true"
+                                className="absolute left-1/2 top-[-32px] h-8 w-[2px] -translate-x-1/2 bg-[#94a3b8]"
+                              />
+                              {renderPerson(member, group)}
+                            </div>
+                          ))}
+                          <span
+                            aria-hidden="true"
+                            className="absolute left-1/2 top-0 h-4 w-[2px] -translate-x-1/2 bg-[#94a3b8]"
+                          />
+                        </div>
+                      )}
+                      {!leader && staff.length === 0 && (
+                        <p className="w-[210px] py-6 text-center text-xs text-slate-400">
+                          No members added yet
+                        </p>
+                      )}
+                    </div>
+                  ) : members.length ? (
+                    <div className="flex w-full justify-center gap-3">
+                      {sortedMembers.map((member) => renderPerson(member, group))}
+                    </div>
+                  ) : (
+                    <p className="w-[210px] py-6 text-center text-xs text-slate-400">
+                      No members added yet
+                    </p>
+                  )}
+                </section>
+              );
+            };
+            const sideLists = [groups.secretary, groups.treasurer];
+            const sideWidths = groupWidths(sideLists);
+            const sideColumnWidth = Math.max(...sideWidths);
+            const sideTotalWidth = sideColumnWidth * 2 + 250 + 48;
+            const sideBranchLeft = `${(sideColumnWidth / 2 / sideTotalWidth) * 100}%`;
+            const sideBranchRight = sideBranchLeft;
+            const divisionGroups = [
+              ["rnd", groups.rnd],
+              ["hrd", groups.hrd],
+              ["media", groups.media],
+            ] as const;
+            const divisionWidths = groupWidths(divisionGroups.map(([, members]) => members));
+            const divisionTotalWidth = divisionWidths.reduce((total, width) => total + width, 0) + 48;
+            const divisionBranchLeft = `${(divisionWidths[0] / 2 / divisionTotalWidth) * 100}%`;
+            const divisionBranchRight = `${(divisionWidths[2] / 2 / divisionTotalWidth) * 100}%`;
+
+            return (
+              <div className="mt-12 overflow-x-auto pb-4">
+                <div className="mx-auto flex w-max min-w-full flex-col items-center px-4">
+                  {groups.kaur[0] && renderPerson(groups.kaur[0], "kaur")}
+                  <div aria-hidden="true" className="h-8 w-px bg-gradient-to-b from-[#50a979] to-slate-300" />
+                  {groups.laboran[0] && renderPerson(groups.laboran[0], "laboran")}
+                  <div aria-hidden="true" className="h-8 w-px bg-gradient-to-b from-[#50a979] to-slate-300" />
+                  {groups.coordinator[0] && renderPerson(groups.coordinator[0], "coordinator")}
+
+                  <div
+                    className="relative mt-8 grid w-max items-start gap-6"
+                    style={{ gridTemplateColumns: `${sideColumnWidth}px 250px ${sideColumnWidth}px` }}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="absolute top-0 z-0 h-[2px] bg-[#94a3b8]"
+                      style={{ left: sideBranchLeft, right: sideBranchRight }}
+                    />
+                    <span
+                      aria-hidden="true"
+                      className="absolute left-1/2 z-0 w-[2px] -translate-x-1/2 bg-[#94a3b8]"
+                      style={{ top: -32, bottom: -49 }}
+                    />
+                    <div className="relative z-10 flex justify-center pt-8">
+                      <span aria-hidden="true" className="absolute left-1/2 top-0 h-8 w-[2px] -translate-x-1/2 bg-[#94a3b8]" />
+                      {renderGroupPanel("secretary", groups.secretary)}
+                    </div>
+                    <div className="w-[250px] shrink-0" aria-hidden="true" />
+                    <div className="relative z-10 flex justify-center pt-8">
+                      <span aria-hidden="true" className="absolute left-1/2 top-0 h-8 w-[2px] -translate-x-1/2 bg-[#94a3b8]" />
+                      {renderGroupPanel("treasurer", groups.treasurer)}
+                    </div>
+                  </div>
+
+                  <div
+                    className="relative mt-12 grid w-max grid-flow-col auto-cols-max gap-6"
+                    style={{ gridTemplateColumns: divisionWidths.map((width) => `${width}px`).join(" ") }}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="absolute top-0 z-0 h-[2px] bg-[#94a3b8]"
+                      style={{ left: divisionBranchLeft, right: divisionBranchRight }}
+                    />
+                    {divisionGroups.map(([group, members]) => (
+                      <div key={group} className="relative z-10 flex justify-center pt-8">
+                        <span aria-hidden="true" className="absolute left-1/2 top-0 h-8 w-[2px] -translate-x-1/2 bg-[#94a3b8]" />
+                        {renderGroupPanel(group, members)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
           <div className="mt-8 rounded-2xl bg-[#eff6f1] px-6 py-5 md:flex md:items-center md:justify-between">
             <p className="text-sm font-medium text-ink">Interested in doing research with us?</p>
             <a href="#contact" className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-leaf md:mt-0">
@@ -511,8 +756,10 @@ export default async function Home() {
               <div className="mt-5 flex flex-col gap-3 text-xs text-slate-400">
                 <a href="#about" className="hover:text-white">About the lab</a>
                 <a href="#research" className="hover:text-white">Research areas</a>
+                <a href="#practicum" className="hover:text-white">Practicum</a>
                 <a href="#publications" className="hover:text-white">Publications</a>
                 <a href="#team" className="hover:text-white">Our team</a>
+                <a href="#contact" className="hover:text-white">Contact</a>
               </div>
             </div>
             <div>
@@ -527,6 +774,7 @@ export default async function Home() {
             <div>
               <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-white">Follow along</h3>
               <div className="mt-5 flex flex-col gap-3 text-xs text-slate-400">
+                <a href="https://www.instagram.com/pnslaboratory?utm_source=ig_web_button_share_sheet&psln=ZDNlZDc0MzIxNw==" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-white">Instagram <ArrowUpRight size={12} /></a>
                 <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-white">LinkedIn <ArrowUpRight size={12} /></a>
                 <a href="https://github.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-white">GitHub <ArrowUpRight size={12} /></a>
                 <a href="https://scholar.google.com/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 hover:text-white">Google Scholar <ArrowUpRight size={12} /></a>
