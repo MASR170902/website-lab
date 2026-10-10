@@ -98,12 +98,19 @@ export async function addNews(formData: FormData) {
   if (dateStr && !/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
     throw new Error('News date is invalid.');
   }
-  const dateObj = dateStr ? new Date(`${dateStr}T00:00:00`) : new Date();
-  if (
-    Number.isNaN(dateObj.getTime()) ||
-    (dateStr && dateObj.toISOString().slice(0, 10) !== dateStr)
-  ) {
+  const dateObj = dateStr ? new Date(`${dateStr}T12:00:00`) : new Date();
+  if (Number.isNaN(dateObj.getTime())) {
     throw new Error('News date is invalid.');
+  }
+  if (dateStr) {
+    const [y, m, d] = dateStr.split('-');
+    if (
+      dateObj.getFullYear() !== Number(y) ||
+      dateObj.getMonth() + 1 !== Number(m) ||
+      dateObj.getDate() !== Number(d)
+    ) {
+      throw new Error('News date is invalid.');
+    }
   }
   
   const db = getDb();

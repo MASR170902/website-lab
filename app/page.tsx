@@ -1,5 +1,5 @@
 import Image from "next/image";
-import heroImage from "../public/hero-building.jpg";
+import heroImage from "../public/telkom-univ.jpg";
 import {
   ArrowDown,
   ArrowDownRight,

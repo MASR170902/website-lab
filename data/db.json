@@ -6,7 +6,10 @@
       "icon": "Network",
       "title": "Network Security",
       "description": "Building stronger foundations for connected systems through protocol analysis, threat intelligence, and resilient network design.",
-      "tags": ["Network protocols", "Threat detection"]
+      "tags": [
+        "Network protocols",
+        "Threat detection"
+      ]
     },
     {
       "id": "ra-2",
@@ -14,7 +17,10 @@
       "icon": "Fingerprint",
       "title": "Applied Cryptography",
       "description": "Exploring practical cryptographic methods that help protect privacy, identity, and data across modern applications.",
-      "tags": ["Privacy", "Authentication"]
+      "tags": [
+        "Privacy",
+        "Authentication"
+      ]
     },
     {
       "id": "ra-3",
@@ -22,7 +28,10 @@
       "icon": "Radio",
       "title": "Secure Systems",
       "description": "Studying the security of software and infrastructure, from embedded devices to the systems that power everyday life.",
-      "tags": ["IoT security", "Systems"]
+      "tags": [
+        "IoT security",
+        "Systems"
+      ]
     }
   ],
   "publications": [
@@ -104,7 +113,15 @@
       "category": "COMMUNITY",
       "title": "Join our student-led introduction to practical network security",
       "href": "mailto:pns-lab@example.edu?subject=Network%20security%20workshop"
+    },
+    {
+      "id": "news-3c8fc3c6-058b-4165-90d6-b605d5ad0e10",
+      "date": "10",
+      "month": "OCT",
+      "year": "2026",
+      "category": "seminar ngopi",
+      "title": "ngopi",
+      "href": "#"
     }
   ]
 }
-
