@@ -1,0 +1,11 @@
+node_modules
+.next
+.next-dev
+out
+dist
+.DS_Store
+npm-debug.log*
+.env*
+!.env.example
+
+ADMIN_PASSWORD_HASH=scrypt-v1:ff9ff835b62892cd2f56edbfdf0f93e6:3f6a1a0afd5106df06bf8f4425fa92b91fc2ba33b44f2871a20fce40f786db441da1881c9486d48e4b0d1da11d41027a4fc1dcf6428154c6d179be044296dd8f

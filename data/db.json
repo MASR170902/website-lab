@@ -1,0 +1,110 @@
+{
+  "researchAreas": [
+    {
+      "id": "ra-1",
+      "number": "01",
+      "icon": "Network",
+      "title": "Network Security",
+      "description": "Building stronger foundations for connected systems through protocol analysis, threat intelligence, and resilient network design.",
+      "tags": ["Network protocols", "Threat detection"]
+    },
+    {
+      "id": "ra-2",
+      "number": "02",
+      "icon": "Fingerprint",
+      "title": "Applied Cryptography",
+      "description": "Exploring practical cryptographic methods that help protect privacy, identity, and data across modern applications.",
+      "tags": ["Privacy", "Authentication"]
+    },
+    {
+      "id": "ra-3",
+      "number": "03",
+      "icon": "Radio",
+      "title": "Secure Systems",
+      "description": "Studying the security of software and infrastructure, from embedded devices to the systems that power everyday life.",
+      "tags": ["IoT security", "Systems"]
+    }
+  ],
+  "publications": [
+    {
+      "id": "pub-1",
+      "type": "JOURNAL ARTICLE",
+      "year": "2025",
+      "title": "Towards Resilient Networked Systems: A Practical Framework for Security Assessment",
+      "authors": "PNS Lab Research Group",
+      "journal": "Journal of Network and Computer Applications",
+      "accent": "bg-[#e7f3ed] text-[#37845d]"
+    },
+    {
+      "id": "pub-2",
+      "type": "CONFERENCE PAPER",
+      "year": "2024",
+      "title": "Lightweight Anomaly Detection for Resource-Constrained Networks",
+      "authors": "PNS Lab Research Group",
+      "journal": "International Conference on Information Security",
+      "accent": "bg-[#e8f1f5] text-[#176b87]"
+    },
+    {
+      "id": "pub-3",
+      "type": "JOURNAL ARTICLE",
+      "year": "2024",
+      "title": "Evaluating Privacy-Preserving Methods in Distributed Environments",
+      "authors": "PNS Lab Research Group",
+      "journal": "Computers & Security",
+      "accent": "bg-[#eef0f6] text-[#596889]"
+    }
+  ],
+  "team": [
+    {
+      "id": "team-1",
+      "initials": "FL",
+      "title": "Faculty Lead",
+      "focus": "Research direction & collaboration",
+      "color": "bg-[#e8f2f4] text-[#176b87]"
+    },
+    {
+      "id": "team-2",
+      "initials": "RF",
+      "title": "Research Fellows",
+      "focus": "Security research & development",
+      "color": "bg-[#e9f4ed] text-[#438c63]"
+    },
+    {
+      "id": "team-3",
+      "initials": "SR",
+      "title": "Student Researchers",
+      "focus": "Curiosity, experiments & new ideas",
+      "color": "bg-[#f3efea] text-[#8c704f]"
+    }
+  ],
+  "newsItems": [
+    {
+      "id": "news-1",
+      "date": "18",
+      "month": "MAR",
+      "year": "2025",
+      "category": "LAB NEWS",
+      "title": "PNS Lab opens applications for undergraduate research assistants",
+      "href": "mailto:pns-lab@example.edu?subject=Undergraduate%20research%20assistant"
+    },
+    {
+      "id": "news-2",
+      "date": "04",
+      "month": "FEB",
+      "year": "2025",
+      "category": "SEMINAR",
+      "title": "Research seminar: Building more resilient campus networks",
+      "href": "mailto:pns-lab@example.edu?subject=Research%20seminar"
+    },
+    {
+      "id": "news-3",
+      "date": "21",
+      "month": "JAN",
+      "year": "2025",
+      "category": "COMMUNITY",
+      "title": "Join our student-led introduction to practical network security",
+      "href": "mailto:pns-lab@example.edu?subject=Network%20security%20workshop"
+    }
+  ]
+}
+
