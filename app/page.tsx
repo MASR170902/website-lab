@@ -7,10 +7,8 @@ import {
   ArrowUpRight,
   Atom,
   Check,
-  ChevronDown,
   ExternalLink,
   Fingerprint,
-  Globe2,
   Network,
   Radio,
   ShieldCheck,
@@ -46,7 +44,7 @@ export default async function Home() {
           sizes="100vw"
           className="absolute inset-0 z-0 object-cover"
         />
-        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0d2535]/70 via-[#103643]/30 to-[#123d45]/10" />
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0d2535]/70 via-[#103643]/45 to-[#123d45]/10" />
         <div className="network-grid pointer-events-none absolute inset-0 z-10 opacity-20" />
         <div className="container-wide relative z-20 flex min-h-[660px] items-center py-20 md:min-h-[710px]">
           <div className="max-w-[700px]">
@@ -75,7 +73,7 @@ export default async function Home() {
               </Button>
               <a
                 href="#about"
-                className="inline-flex h-14 items-center gap-2 rounded-full px-5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
+                className="inline-flex h-14 items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
               >
                 Discover our lab <ArrowDown size={15} />
               </a>
@@ -90,31 +88,7 @@ export default async function Home() {
             </div>
           </div>
 
-          <div className="absolute bottom-12 right-0 hidden w-[250px] rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md lg:block">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-200">Connected by research</span>
-              <Globe2 size={17} className="text-[#a6e7bb]" />
-            </div>
-            <div className="mt-5 flex items-end gap-1.5">
-              {[28, 42, 34, 54, 39, 64, 48, 74, 58, 86, 67, 96, 78, 62, 82, 55].map(
-                (height, index) => (
-                  <span
-                    key={index}
-                    className="flex-1 rounded-t-sm bg-gradient-to-t from-[#55b77d] to-[#a8e5bd]"
-                    style={{ height: `${height}px`, opacity: 0.45 + index * 0.035 }}
-                  />
-                ),
-              )}
-            </div>
-            <p className="mt-3 text-[10px] text-slate-300">People · Ideas · Networks</p>
-          </div>
         </div>
-        <a
-          href="#about"
-          className="absolute bottom-0 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-t-xl border border-b-0 border-white/20 bg-white/10 px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.17em] text-white/80 backdrop-blur-sm"
-        >
-          Scroll to explore <ChevronDown size={13} />
-        </a>
       </section>
 
       <section id="about" className="border-b border-slate-100 bg-white">
