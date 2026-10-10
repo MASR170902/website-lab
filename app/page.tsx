@@ -57,9 +57,9 @@ export default async function Home() {
               Securing the networks that connect us.
             </h1>
             <p className="mt-7 max-w-[540px] text-base leading-7 text-slate-200 md:text-[17px] md:leading-8">
-              We are the Programming & Network Security Lab — advancing trusted
-              technologies through thoughtful research, collaboration, and
-              hands-on learning.
+              PNS Lab is where real network and security problems get solved.
+              Not simulations. Not textbook exercises. Actual systems, actual
+              vulnerabilities, actual fixes — by students who mean it.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Button
@@ -117,26 +117,77 @@ export default async function Home() {
       </section>
 
       <section id="about" className="border-b border-slate-100 bg-white">
-        <div className="container-wide grid gap-10 py-16 md:grid-cols-[1fr_1.3fr] md:items-center md:py-[84px]">
-          <div>
-            <span className="eyebrow">Who we are</span>
-            <h2 className="mt-5 max-w-[440px] text-3xl font-semibold leading-tight tracking-[-0.04em] text-ink md:text-[40px]">
-              Better security starts with better questions.
-            </h2>
+        <div className="container-wide py-16 md:py-[84px]">
+          <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
+            <div>
+              <span className="eyebrow">Who we are</span>
+              <h2 className="mt-5 max-w-[440px] text-3xl font-semibold leading-tight tracking-[-0.04em] text-ink md:text-[40px]">
+                Programming and network security. One lab.
+              </h2>
+            </div>
+            <div className="md:border-l md:border-slate-200 md:pl-10">
+              <p className="text-[15px] leading-7 text-slate-600">
+                PNS Lab is a research laboratory at Telkom University
+                Purwokerto, focused on two things: programming and network
+                security. Not as separate disciplines. As one.
+              </p>
+              <p className="mt-4 text-[15px] leading-7 text-slate-600">
+                The lab exists for a straightforward reason — to produce people
+                who actually understand what they&apos;re doing. Not just
+                students who passed the exam.
+              </p>
+            </div>
           </div>
-          <div className="md:border-l md:border-slate-200 md:pl-10">
-            <p className="text-[15px] leading-7 text-slate-600">
-              PNS Lab brings together researchers and students to understand
-              the challenges facing today&apos;s connected world. We pair
-              rigorous computer science with practical experimentation to make
-              digital systems more secure, dependable, and accessible.
-            </p>
+
+          <div className="mt-12 grid gap-8 border-t border-slate-200 pt-9 md:grid-cols-2 md:gap-12">
+            <article>
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-ocean">
+                What we do
+              </span>
+              <p className="mt-4 text-sm leading-7 text-slate-600">
+                Research here starts from concrete problems. Infrastructure
+                that hasn&apos;t been hardened. Protocols that need testing.
+                Tools that don&apos;t exist yet but should.
+              </p>
+              <p className="mt-3 text-sm leading-7 text-slate-600">
+                From there, findings get documented, published, and turned
+                into hands-on learning material. The cycle repeats. That&apos;s
+                how the lab runs.
+              </p>
+            </article>
+            <article>
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-ocean">
+                Our approach
+              </span>
+              <p className="mt-4 text-sm leading-7 text-slate-600">
+                Members are trained to think like attackers. Not because the
+                lab teaches anything reckless — but because understanding how
+                something breaks is the only honest way to understand how to
+                protect it.
+              </p>
+              <p className="mt-3 text-sm leading-7 text-slate-600">
+                It&apos;s harder than sitting in a lecture. That&apos;s exactly
+                why people join.
+              </p>
+            </article>
+          </div>
+
+          <div className="mt-8">
             <a
               href="#team"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-leaf"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-leaf"
             >
               Meet our community <ArrowRight size={15} />
             </a>
+          </div>
+
+          <div className="mt-12 flex flex-col gap-2 border-t border-slate-200 pt-8 sm:flex-row sm:items-end sm:gap-4">
+            <span className="text-5xl font-semibold leading-none tracking-[-0.06em] text-ocean md:text-6xl">
+              23
+            </span>
+            <span className="pb-1 text-xs font-semibold uppercase tracking-[0.15em] text-slate-500">
+              Active members
+            </span>
           </div>
         </div>
       </section>
@@ -239,9 +290,9 @@ export default async function Home() {
               </p>
               <div className="mt-8 space-y-4">
                 {[
-                  "Security-minded design for connected infrastructure",
-                  "Practical tools informed by real-world constraints",
-                  "Open collaboration across research and education",
+                  "Threat detection on live network traffic",
+                  "Tools built for actual deployment, not just demos",
+                  "Research published and shared openly",
                 ].map((point: string) => (
                   <div key={point} className="flex items-center gap-3 text-[13px] text-slate-700">
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#e8f5ed] text-leaf">
@@ -407,7 +458,11 @@ export default async function Home() {
             <h2 className="mt-4 max-w-[610px] text-3xl font-semibold leading-tight tracking-[-0.04em] md:text-[40px]">
               Have a question or an idea to explore?
             </h2>
-            <p className="mt-3 text-sm text-slate-300">We would love to hear from students, researchers, and collaborators.</p>
+            <p className="mt-3 max-w-[680px] text-sm leading-7 text-slate-300">
+              PNS Lab is open to research collaboration, industry partnerships,
+              and students who are serious about learning network security
+              from the inside out.
+            </p>
           </div>
           <Button
             asChild
@@ -448,7 +503,7 @@ export default async function Home() {
                 />
               </a>
               <p className="mt-5 max-w-[255px] text-xs leading-6 text-slate-400">
-                Researching secure, resilient, and trustworthy digital systems.
+                Research that works in the real world.
               </p>
             </div>
             <div>
@@ -464,9 +519,9 @@ export default async function Home() {
               <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-white">Get in touch</h3>
               <div className="mt-5 flex flex-col gap-3 text-xs text-slate-400">
                 <a href="mailto:pns-lab@example.edu" className="hover:text-white">pns-lab@example.edu</a>
-                <span>Department / Faculty</span>
-                <span>University address</span>
-                <span>City, Country</span>
+                <span>Faculty of Electrical Engineering (FTE)</span>
+                <span>Building TT 303, Telkom University Purwokerto</span>
+                <span>Purwokerto, Indonesia</span>
               </div>
             </div>
             <div>
