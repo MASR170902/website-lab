@@ -1,5 +1,5 @@
 import Image from "next/image";
-import heroImage from "../public/telkom-univ.jpg";
+import heroImage from "../public/background.jpg";
 import {
   ArrowDown,
   ArrowDownRight,
@@ -44,20 +44,20 @@ export default async function Home() {
           placeholder="blur"
           fetchPriority="high"
           sizes="100vw"
-          className="absolute inset-0 -z-20 object-cover"
+          className="absolute inset-0 z-0 object-cover"
         />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#0d2535]/95 via-[#103643]/75 to-[#123d45]/35" />
-        <div className="network-grid pointer-events-none absolute inset-0 z-0 opacity-40" />
-        <div className="container-wide relative z-10 flex min-h-[660px] items-center py-20 md:min-h-[710px]">
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-[#0d2535]/70 via-[#103643]/30 to-[#123d45]/10" />
+        <div className="network-grid pointer-events-none absolute inset-0 z-10 opacity-20" />
+        <div className="container-wide relative z-20 flex min-h-[660px] items-center py-20 md:min-h-[710px]">
           <div className="max-w-[700px]">
             <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/90 backdrop-blur-sm">
               <span className="h-2 w-2 rounded-full bg-[#7cdaa2]" />
               Researching a safer digital world
             </div>
-            <h1 className="max-w-[680px] text-[clamp(42px,7vw,76px)] font-semibold leading-[1.04] tracking-[-0.055em]">
+            <h1 className="max-w-[680px] text-[clamp(42px,7vw,76px)] font-semibold leading-[1.04] tracking-[-0.055em] drop-shadow-md">
               Securing the networks that connect us.
             </h1>
-            <p className="mt-7 max-w-[540px] text-base leading-7 text-slate-200 md:text-[17px] md:leading-8">
+            <p className="mt-7 max-w-[540px] text-base leading-7 text-slate-200 md:text-[17px] md:leading-8 drop-shadow-md">
               PNS Lab is where real network and security problems get solved.
               Not simulations. Not textbook exercises. Actual systems, actual
               vulnerabilities, actual fixes — by students who mean it.
@@ -111,7 +111,7 @@ export default async function Home() {
         </div>
         <a
           href="#about"
-          className="absolute bottom-0 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-t-xl border border-b-0 border-white/20 bg-white/10 px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.17em] text-white/80 backdrop-blur-sm"
+          className="absolute bottom-0 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-t-xl border border-b-0 border-white/20 bg-white/10 px-5 py-3 text-[9px] font-semibold uppercase tracking-[0.17em] text-white/80 backdrop-blur-sm"
         >
           Scroll to explore <ChevronDown size={13} />
         </a>
