@@ -62,7 +62,12 @@ export default async function Home() {
               hands-on learning.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-3">
-              <Button asChild size="lg" className="bg-white text-ink hover:bg-emerald-50">
+              <Button
+                asChild
+                size="lg"
+                variant="light"
+                className="hero-research-button"
+              >
                 <a href="#research">
                   Explore Research <ArrowRight size={17} />
                 </a>

@@ -71,6 +71,27 @@ a {
   background-color: #173c4c;
 }
 
+.header-contact-button {
+  background-color: #176b87;
+  color: #fff;
+  box-shadow: 0 3px 10px rgb(23 107 135 / 22%);
+}
+
+.header-contact-button:hover {
+  background-color: #12566d;
+}
+
+.hero-research-button {
+  border: 2px solid #fff;
+  background-color: #fff;
+  color: #172b3a;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 22%);
+}
+
+.hero-research-button:hover {
+  background-color: #e8f6ee;
+}
+
 .network-grid {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),

@@ -55,7 +55,11 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <Button asChild className="hidden md:inline-flex">
+        <Button
+          asChild
+          variant="primary"
+          className="header-contact-button hidden md:inline-flex"
+        >
           <a href="#contact">
             Get in Touch <ArrowUpRight size={15} />
           </a>
