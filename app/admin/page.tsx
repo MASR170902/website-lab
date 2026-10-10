@@ -95,7 +95,7 @@ export default async function AdminPage() {
                         </div>
                       </div>
                       <div className="flex flex-col gap-3">
-                        <form action={updateOrganizationMember} className="flex flex-col gap-3">
+                        <form action={updateOrganizationMember} encType="multipart/form-data" className="flex flex-col gap-3">
                           <input type="hidden" name="id" value={member.id} />
                           <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
                             Nama pengurus
