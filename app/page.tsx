@@ -41,7 +41,6 @@ export default async function Home() {
           alt=""
           fill
           priority
-          placeholder="blur"
           fetchPriority="high"
           sizes="100vw"
           className="absolute inset-0 z-0 object-cover"
@@ -94,11 +93,11 @@ export default async function Home() {
       </section>
 
       <section id="about" className="border-b border-slate-100 bg-white">
-        <div className="container-wide py-16 md:py-[84px]">
-          <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
+        <div className="mx-auto w-full max-w-[1160px] px-4 min-[360px]:px-5 sm:px-6 md:px-8 py-14 sm:py-16 md:py-[84px] xl:px-0">
+          <div className="grid gap-6 sm:gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
             <div>
               <span className="eyebrow">Who we are</span>
-              <h2 className="mt-5 max-w-[440px] text-3xl font-semibold leading-tight tracking-[-0.04em] text-ink md:text-[40px]">
+              <h2 className="mt-4 sm:mt-5 w-full max-w-[440px] text-2xl font-semibold leading-tight tracking-[-0.04em] text-ink sm:text-3xl md:text-[40px]">
                 Programming and network security. One lab.
               </h2>
             </div>
@@ -381,7 +380,7 @@ export default async function Home() {
                 Latest publications
               </h2>
             </div>
-            <a href="mailto:pns-lab@example.edu?subject=Publication%20list" className="inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-leaf">
+            <a href="mailto:lab-psd@ittelkom-pwt.ac.id?subject=Publication%20list" className="inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-leaf">
               View all publications <ArrowUpRight size={15} />
             </a>
           </div>
@@ -406,7 +405,7 @@ export default async function Home() {
                 <div className="flex items-center justify-between md:justify-end md:gap-4">
                   <span className="text-xs font-medium text-slate-400">{publication.year}</span>
                   <a
-                    href="mailto:pns-lab@example.edu?subject=Publication%20request"
+                    href="mailto:lab-psd@ittelkom-pwt.ac.id?subject=Publication%20request"
                     aria-label={`Request ${publication.title}`}
                     className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition-colors hover:border-ocean hover:text-ocean"
                   >
@@ -653,7 +652,7 @@ export default async function Home() {
                 News & events
               </h2>
             </div>
-            <a href="mailto:pns-lab@example.edu?subject=Lab%20updates" className="inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-leaf">
+            <a href="mailto:lab-psd@ittelkom-pwt.ac.id?subject=Lab%20updates" className="inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-leaf">
               Get lab updates <ArrowRight size={15} />
             </a>
           </div>
@@ -712,7 +711,7 @@ export default async function Home() {
             variant="light"
             className="contact-cta-button shrink-0"
           >
-            <a href="mailto:pns-lab@example.edu">
+            <a href="mailto:lab-psd@ittelkom-pwt.ac.id">
               Get in touch <ArrowUpRight size={16} />
             </a>
           </Button>
@@ -762,7 +761,7 @@ export default async function Home() {
             <div>
               <h3 className="text-[10px] font-bold uppercase tracking-[0.15em] text-white">Get in touch</h3>
               <div className="mt-5 flex flex-col gap-3 text-xs text-slate-400">
-                <a href="mailto:pns-lab@example.edu" className="hover:text-white">pns-lab@example.edu</a>
+                <a href="mailto:lab-psd@ittelkom-pwt.ac.id" className="hover:text-white">lab-psd@ittelkom-pwt.ac.id</a>
                 <span>Faculty of Electrical Engineering (FTE)</span>
                 <span>Building TT 303, Telkom University Purwokerto</span>
                 <span>Purwokerto, Indonesia</span>

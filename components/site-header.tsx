@@ -5,21 +5,23 @@ import Image from "next/image";
 import { Menu, X } from "lucide-react";
 
 const navigation = [
-  { label: "About", href: "#about" },
-  { label: "Research", href: "#research" },
-  { label: "Practicum", href: "#practicum" },
-  { label: "Publications", href: "#publications" },
-  { label: "Team", href: "#team" },
-  { label: "News & Events", href: "#news" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "/#about" },
+  { label: "Research", href: "/#research" },
+  { label: "Practicum", href: "/#practicum" },
+  { label: "Publications", href: "/#publications" },
+  { label: "Team", href: "/#team" },
+  { label: "News & Events", href: "/#news" },
+  { label: "Contact", href: "/#contact" },
 ];
+
+const getSectionId = (href: string) => href.replace(/^\/?#/, "");
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   useEffect(() => {
-    const sectionIds = [...navigation.map((item) => item.href.slice(1)), "contact"];
+    const sectionIds = [...navigation.map((item) => getSectionId(item.href)), "contact"];
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
@@ -48,7 +50,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-30 border-b border-slate-100 bg-white">
       <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between px-4 min-[360px]:px-5 sm:px-6 md:px-8 min-h-[64px] py-2 sm:min-h-[72px] sm:py-2.5 xl:h-[78px] xl:min-h-[78px] xl:px-0 xl:py-0">
         <a
-          href="#"
+          href="/"
           className="flex min-w-0 items-center gap-1 min-[360px]:gap-1.5 sm:gap-2.5 md:gap-3"
           aria-label="Programming Labs and Network Security Labs home"
         >
@@ -81,24 +83,30 @@ export function SiteHeader() {
         </a>
 
         <nav aria-label="Main navigation" className="hidden items-center gap-2 xl:flex">
-          {navigation.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              aria-current={activeSection === item.href.slice(1) ? "location" : undefined}
-              className={`rounded-full px-2.5 py-2 text-[13px] transition-colors ${
-                item.href === "#contact"
-                  ? `header-contact-button px-3 font-semibold ${
-                      activeSection === "contact" ? "ring-2 ring-[#a8e5bd] ring-offset-2" : ""
-                    }`
-                  : activeSection === item.href.slice(1)
-                    ? "bg-[#edf5f0] font-semibold text-ocean"
-                    : "font-medium text-slate-600 hover:text-ocean"
-              }`}
-            >
-              {item.label}
-            </a>
-          ))}
+          {navigation.map((item) => {
+            const sectionId = getSectionId(item.href);
+            const isContact = sectionId === "contact";
+            const isActive = activeSection === sectionId;
+
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                aria-current={isActive ? "location" : undefined}
+                className={`rounded-full px-2.5 py-2 text-[13px] transition-colors ${
+                  isContact
+                    ? `header-contact-button px-3 font-semibold ${
+                        isActive ? "ring-2 ring-[#a8e5bd] ring-offset-2" : ""
+                      }`
+                    : isActive
+                      ? "bg-[#edf5f0] font-semibold text-ocean"
+                      : "font-medium text-slate-600 hover:text-ocean"
+                }`}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
 
         <button
@@ -118,25 +126,31 @@ export function SiteHeader() {
           className="absolute left-0 right-0 top-full border-t border-slate-100 bg-white px-5 py-5 shadow-lg xl:hidden"
         >
           <div className="mx-auto flex max-w-[560px] flex-col gap-1">
-            {navigation.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={() => setMenuOpen(false)}
-                aria-current={activeSection === item.href.slice(1) ? "location" : undefined}
-                className={`rounded-lg px-3 py-3 text-sm ${
-                  item.href === "#contact"
-                    ? `mt-2 text-center font-semibold text-white ${
-                        activeSection === "contact" ? "bg-ocean" : "bg-ink"
-                      }`
-                    : activeSection === item.href.slice(1)
-                      ? "bg-[#edf5f0] font-semibold text-ocean"
-                      : "font-medium text-slate-700 hover:bg-mist"
-                }`}
-              >
-                {item.label}
-              </a>
-            ))}
+            {navigation.map((item) => {
+              const sectionId = getSectionId(item.href);
+              const isContact = sectionId === "contact";
+              const isActive = activeSection === sectionId;
+
+              return (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  onClick={() => setMenuOpen(false)}
+                  aria-current={isActive ? "location" : undefined}
+                  className={`rounded-lg px-3 py-3 text-sm ${
+                    isContact
+                      ? `mt-2 text-center font-semibold text-white ${
+                          isActive ? "bg-ocean" : "bg-ink"
+                        }`
+                      : isActive
+                        ? "bg-[#edf5f0] font-semibold text-ocean"
+                        : "font-medium text-slate-700 hover:bg-mist"
+                  }`}
+                >
+                  {item.label}
+                </a>
+              );
+            })}
           </div>
         </nav>
       )}
