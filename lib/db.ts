@@ -1,7 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-
-const dbPath = path.join(process.cwd(), 'data', 'db.json');
+import { eq } from 'drizzle-orm';
+import { db, sqlite } from './drizzle';
+import * as schema from './schema';
 
 export interface Publication {
   id: string;
@@ -29,6 +28,26 @@ export interface OrganizationMember {
   name: string;
   isLeader: boolean;
   photo?: string;
+}
+
+export interface Praktikum {
+  id: string;
+  modul: string;
+  judul: string;
+  deskripsi: string;
+  pdfPath: string | null;
+  gambar: string[];
+  createdAt: string;
+}
+
+export interface NewPraktikum {
+  id?: string;
+  modul: string;
+  judul: string;
+  deskripsi: string;
+  pdfPath?: string | null;
+  gambar?: string[];
+  createdAt?: string;
 }
 
 export const ORGANIZATION_GROUPS = {
@@ -65,162 +84,277 @@ export interface LabDatabase {
   team: Record<string, unknown>[];
   organizationMembers: OrganizationMember[];
   newsItems: NewsItem[];
+  praktikum?: Praktikum[];
 }
 
-function isRecordArray(value: unknown): value is Record<string, unknown>[] {
-  return (
-    Array.isArray(value) &&
-    value.every((item) => typeof item === 'object' && item !== null && !Array.isArray(item))
-  );
-}
-
-function isPublicationArray(value: unknown): value is Publication[] {
-  return (
-    isRecordArray(value) &&
-    value.every(
-      (item) =>
-        typeof item.id === 'string' &&
-        typeof item.type === 'string' &&
-        typeof item.year === 'string' &&
-        typeof item.title === 'string' &&
-        typeof item.authors === 'string' &&
-        typeof item.journal === 'string' &&
-        typeof item.accent === 'string',
-    )
-  );
-}
-
-function isNewsItemArray(value: unknown): value is NewsItem[] {
-  return (
-    isRecordArray(value) &&
-    value.every(
-      (item) =>
-        typeof item.id === 'string' &&
-        typeof item.date === 'string' &&
-        typeof item.month === 'string' &&
-        typeof item.year === 'string' &&
-        typeof item.category === 'string' &&
-        typeof item.title === 'string' &&
-        typeof item.href === 'string',
-    )
-  );
-}
-
-function isOrganizationMemberArray(value: unknown): value is OrganizationMember[] {
-  return (
-    isRecordArray(value) &&
-    value.every(
-      (item) =>
-        typeof item.id === "string" &&
-        typeof item.group === "string" &&
-        isOrganizationGroup(item.group) &&
-        typeof item.name === "string" &&
-        typeof item.isLeader === "boolean" &&
-        (item.photo === undefined || typeof item.photo === "string"),
-    )
-  );
-}
-
-function migrateOrganizationMembers(value: unknown): OrganizationMember[] | null {
-  if (isOrganizationMemberArray(value)) return value;
-  if (!isRecordArray(value)) return null;
-
-  const legacyGroups: Record<string, OrganizationGroup> = {
-    "org-kaur-lab": "kaur",
-    "org-laboran": "laboran",
-    "org-koordinator": "coordinator",
-    "org-sekretaris": "secretary",
-    "org-bendahara": "treasurer",
-    "org-rnd": "rnd",
-    "org-hrd": "hrd",
-    "org-media-creative": "media",
-  };
-
-  const migrated: OrganizationMember[] = [];
-  for (const item of value) {
-    if (
-      typeof item.id !== "string" ||
-      typeof item.name !== "string" ||
-      (item.photo !== undefined && typeof item.photo !== "string")
-    ) {
-      return null;
+function parseStringArray(value: string | null | undefined): string[] {
+  if (!value) return [];
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (Array.isArray(parsed) && parsed.every((item) => typeof item === 'string')) {
+      return parsed;
     }
-    const group =
-      typeof item.group === "string" && isOrganizationGroup(item.group)
-        ? item.group
-        : legacyGroups[item.id];
-    if (!group) return null;
-
-    migrated.push({
-      id: item.id,
-      group,
-      name: item.name,
-      isLeader: typeof item.isLeader === "boolean" ? item.isLeader : true,
-      ...(typeof item.photo === "string" ? { photo: item.photo } : {}),
-    });
+    return [];
+  } catch {
+    return [];
   }
-  return migrated;
 }
 
-function parseDb(data: string): LabDatabase {
-  const parsed: unknown = JSON.parse(data);
-  const organizationMembers =
-    typeof parsed === "object" &&
-    parsed !== null &&
-    "organizationMembers" in parsed
-      ? parsed.organizationMembers
-      : DEFAULT_ORGANIZATION_MEMBERS;
-  const normalizedOrganizationMembers =
-    migrateOrganizationMembers(organizationMembers);
+// Praktikum CRUD functions
+export function getAllPraktikum(): Praktikum[] {
+  const rows = db.select().from(schema.praktikum).all();
+  return rows.map((row) => ({
+    id: row.id,
+    modul: row.modul,
+    judul: row.judul,
+    deskripsi: row.deskripsi,
+    pdfPath: row.pdfPath,
+    gambar: parseStringArray(row.gambar),
+    createdAt: row.createdAt,
+  }));
+}
 
-  if (
-    typeof parsed !== 'object' ||
-    parsed === null ||
-    !('researchAreas' in parsed) ||
-    !('publications' in parsed) ||
-    !('team' in parsed) ||
-    !('newsItems' in parsed) ||
-    !isRecordArray(parsed.researchAreas) ||
-    !isPublicationArray(parsed.publications) ||
-    !isRecordArray(parsed.team) ||
-    !normalizedOrganizationMembers ||
-    !isNewsItemArray(parsed.newsItems)
-  ) {
-    throw new Error('The lab content database has an invalid format.');
-  }
+export function getPraktikumById(id: string): Praktikum | null {
+  const [row] = db.select().from(schema.praktikum).where(eq(schema.praktikum.id, id)).all();
+  if (!row) return null;
+  return {
+    id: row.id,
+    modul: row.modul,
+    judul: row.judul,
+    deskripsi: row.deskripsi,
+    pdfPath: row.pdfPath,
+    gambar: parseStringArray(row.gambar),
+    createdAt: row.createdAt,
+  };
+}
+
+export function createPraktikum(data: NewPraktikum): Praktikum {
+  const id = data.id ?? crypto.randomUUID();
+  const createdAt = data.createdAt ?? new Date().toISOString();
+  const gambarJson = JSON.stringify(data.gambar ?? []);
+
+  db.insert(schema.praktikum).values({
+    id,
+    modul: data.modul,
+    judul: data.judul,
+    deskripsi: data.deskripsi,
+    pdfPath: data.pdfPath ?? null,
+    gambar: gambarJson,
+    createdAt,
+  }).run();
 
   return {
-    researchAreas: parsed.researchAreas,
-    publications: parsed.publications,
-    team: parsed.team,
-    organizationMembers: normalizedOrganizationMembers,
-    newsItems: parsed.newsItems,
+    id,
+    modul: data.modul,
+    judul: data.judul,
+    deskripsi: data.deskripsi,
+    pdfPath: data.pdfPath ?? null,
+    gambar: data.gambar ?? [],
+    createdAt,
   };
+}
+
+export function updatePraktikum(id: string, data: Partial<NewPraktikum>): Praktikum | null {
+  const existing = getPraktikumById(id);
+  if (!existing) return null;
+
+  const updateValues: {
+    modul?: string;
+    judul?: string;
+    deskripsi?: string;
+    pdfPath?: string | null;
+    gambar?: string;
+  } = {};
+
+  if (data.modul !== undefined) updateValues.modul = data.modul;
+  if (data.judul !== undefined) updateValues.judul = data.judul;
+  if (data.deskripsi !== undefined) updateValues.deskripsi = data.deskripsi;
+  if (data.pdfPath !== undefined) updateValues.pdfPath = data.pdfPath;
+  if (data.gambar !== undefined) updateValues.gambar = JSON.stringify(data.gambar);
+
+  if (Object.keys(updateValues).length > 0) {
+    db.update(schema.praktikum).set(updateValues).where(eq(schema.praktikum.id, id)).run();
+  }
+
+  return getPraktikumById(id);
+}
+
+export function deletePraktikum(id: string): boolean {
+  const result = db.delete(schema.praktikum).where(eq(schema.praktikum.id, id)).run();
+  return result.changes > 0;
 }
 
 export function getDb(): LabDatabase {
-  try {
-    return parseDb(fs.readFileSync(dbPath, 'utf-8'));
-  } catch (error) {
-    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
-      return {
-        researchAreas: [],
-        publications: [],
-        team: [],
-        organizationMembers: DEFAULT_ORGANIZATION_MEMBERS,
-        newsItems: [],
-      };
+  const rawResearchAreas = db.select().from(schema.researchAreas).all();
+  const rawPublications = db.select().from(schema.publications).all();
+  const rawTeam = db.select().from(schema.team).all();
+  const rawMembers = db.select().from(schema.organizationMembers).all();
+  const rawNews = db.select().from(schema.newsItems).all();
+
+  const researchAreas = rawResearchAreas.map((row) => {
+    let parsedTags: unknown = [];
+    try {
+      parsedTags = typeof row.tags === 'string' ? JSON.parse(row.tags) : row.tags;
+    } catch {
+      parsedTags = [];
     }
-    throw error;
-  }
+    return {
+      id: row.id,
+      number: row.number,
+      icon: row.icon,
+      title: row.title,
+      description: row.description,
+      tags: parsedTags,
+    };
+  });
+
+  const publications: Publication[] = rawPublications.map((row) => ({
+    id: row.id,
+    type: row.type,
+    year: row.year,
+    title: row.title,
+    authors: row.authors,
+    journal: row.journal,
+    accent: row.accent,
+  }));
+
+  const team: Record<string, unknown>[] = rawTeam.map((row) => ({
+    id: row.id,
+    initials: row.initials,
+    title: row.title,
+    focus: row.focus,
+    color: row.color,
+  }));
+
+  const organizationMembers: OrganizationMember[] = (
+    rawMembers.length > 0 ? rawMembers : DEFAULT_ORGANIZATION_MEMBERS
+  ).map((row) => ({
+    id: row.id,
+    group: isOrganizationGroup(row.group) ? row.group : 'kaur',
+    name: row.name,
+    isLeader: Boolean(row.isLeader),
+    ...(row.photo ? { photo: row.photo } : {}),
+  }));
+
+  const newsItems: NewsItem[] = rawNews.map((row) => ({
+    id: row.id,
+    date: row.date,
+    month: row.month,
+    year: row.year,
+    category: row.category,
+    title: row.title,
+    href: row.href,
+  }));
+
+  return {
+    researchAreas,
+    publications,
+    team,
+    organizationMembers,
+    newsItems,
+    praktikum: getAllPraktikum(),
+  };
 }
 
 export function saveDb(data: LabDatabase): void {
-  fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-  const temporaryPath = `${dbPath}.${process.pid}.tmp`;
-  fs.writeFileSync(temporaryPath, JSON.stringify(data, null, 2), {
-    encoding: 'utf-8',
-    mode: 0o600,
+  const syncTransaction = sqlite.transaction(() => {
+    if (data.researchAreas && Array.isArray(data.researchAreas)) {
+      db.delete(schema.researchAreas).run();
+      if (data.researchAreas.length > 0) {
+        db.insert(schema.researchAreas).values(
+          data.researchAreas.map((item) => ({
+            id: String(item.id ?? ''),
+            number: String(item.number ?? ''),
+            icon: String(item.icon ?? ''),
+            title: String(item.title ?? ''),
+            description: String(item.description ?? ''),
+            tags: typeof item.tags === 'string' ? item.tags : JSON.stringify(item.tags ?? []),
+          }))
+        ).run();
+      }
+    }
+
+    if (data.publications && Array.isArray(data.publications)) {
+      db.delete(schema.publications).run();
+      if (data.publications.length > 0) {
+        db.insert(schema.publications).values(
+          data.publications.map((item) => ({
+            id: item.id,
+            type: item.type,
+            year: item.year,
+            title: item.title,
+            authors: item.authors,
+            journal: item.journal,
+            accent: item.accent,
+          }))
+        ).run();
+      }
+    }
+
+    if (data.team && Array.isArray(data.team)) {
+      db.delete(schema.team).run();
+      if (data.team.length > 0) {
+        db.insert(schema.team).values(
+          data.team.map((item) => ({
+            id: String(item.id ?? ''),
+            initials: String(item.initials ?? ''),
+            title: String(item.title ?? ''),
+            focus: String(item.focus ?? ''),
+            color: String(item.color ?? ''),
+          }))
+        ).run();
+      }
+    }
+
+    if (data.organizationMembers && Array.isArray(data.organizationMembers)) {
+      db.delete(schema.organizationMembers).run();
+      if (data.organizationMembers.length > 0) {
+        db.insert(schema.organizationMembers).values(
+          data.organizationMembers.map((item) => ({
+            id: item.id,
+            group: item.group,
+            name: item.name,
+            isLeader: Boolean(item.isLeader),
+            photo: item.photo ?? null,
+          }))
+        ).run();
+      }
+    }
+
+    if (data.newsItems && Array.isArray(data.newsItems)) {
+      db.delete(schema.newsItems).run();
+      if (data.newsItems.length > 0) {
+        db.insert(schema.newsItems).values(
+          data.newsItems.map((item) => ({
+            id: item.id,
+            date: item.date,
+            month: item.month,
+            year: item.year,
+            category: item.category,
+            title: item.title,
+            href: item.href,
+          }))
+        ).run();
+      }
+    }
+
+    if (data.praktikum && Array.isArray(data.praktikum)) {
+      db.delete(schema.praktikum).run();
+      if (data.praktikum.length > 0) {
+        db.insert(schema.praktikum).values(
+          data.praktikum.map((item) => ({
+            id: item.id,
+            modul: item.modul,
+            judul: item.judul,
+            deskripsi: item.deskripsi,
+            pdfPath: item.pdfPath ?? null,
+            gambar: Array.isArray(item.gambar) ? JSON.stringify(item.gambar) : String(item.gambar ?? '[]'),
+            createdAt: item.createdAt,
+          }))
+        ).run();
+      }
+    }
   });
-  fs.renameSync(temporaryPath, dbPath);
+
+  syncTransaction();
 }

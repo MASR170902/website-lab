@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import heroImage from "../public/background.jpg";
 import {
@@ -6,6 +7,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Atom,
+  BookOpen,
   Check,
   ExternalLink,
   Fingerprint,
@@ -268,9 +270,30 @@ export default async function Home() {
             ))}
           </div>
 
+          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#cbe3d6] bg-[#edf6f1] p-6 sm:p-7">
+            <div className="max-w-[550px]">
+              <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-leaf">
+                Dokumentasi &amp; Modul
+              </span>
+              <h3 className="mt-1 text-lg font-semibold text-ink">
+                Dokumentasi Praktikum PNS Lab
+              </h3>
+              <p className="mt-1 text-xs leading-5 text-slate-600">
+                Akses galeri foto dokumentasi kegiatan laboratorium, rangkuman materi pembelajaran, dan modul panduan resmi.
+              </p>
+            </div>
+            <Link
+              href="/praktikum"
+              className="inline-flex items-center gap-2 rounded-xl bg-ocean px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#12586e]"
+            >
+              <BookOpen size={17} />
+              Lihat Dokumentasi Praktikum <ArrowRight size={16} />
+            </Link>
+          </div>
+
           <a
             href="#contact"
-            className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-ocean hover:text-leaf"
+            className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-ocean"
           >
             Ask about the practicum <ArrowRight size={15} />
           </a>

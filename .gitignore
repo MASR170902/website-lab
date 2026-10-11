@@ -7,3 +7,9 @@ dist
 npm-debug.log*
 .env*
 !.env.example
+data/school.db
+data/school.db-shm
+data/school.db-wal
+drizzle/
+data/uploads/
+public/*.original.*

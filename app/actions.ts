@@ -3,7 +3,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
-import { getDb, isOrganizationGroup, saveDb } from '@/lib/db';
+import {
+  getDb,
+  isOrganizationGroup,
+  saveDb,
+  createPraktikum as createPraktikumDb,
+  updatePraktikum as updatePraktikumDb,
+  deletePraktikum as deletePraktikumDb,
+  getPraktikumById,
+} from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -319,4 +327,177 @@ function getTextField(formData: FormData, name: string): string {
     throw new Error(`The ${name} field must be text.`);
   }
   return value.trim();
+}
+
+export async function createPraktikum(formData: FormData) {
+  await requireAdmin();
+
+  const modul = getTextField(formData, 'modul').trim() || 'Praktikum';
+  const judul = getTextField(formData, 'judul').trim();
+  const deskripsi = getTextField(formData, 'deskripsi').trim();
+
+  if (!judul) {
+    throw new Error('Judul kegiatan praktikum wajib diisi.');
+  }
+
+  if (!deskripsi) {
+    throw new Error('Deskripsi kegiatan praktikum wajib diisi (1-3 paragraf).');
+  }
+
+  const imageFiles = formData.getAll('gambar');
+  const gambar = await storePracticeImages(imageFiles);
+
+  if (gambar.length === 0) {
+    throw new Error('Wajib mengunggah minimal 1 foto dokumentasi kegiatan praktikum.');
+  }
+
+  const pdfFile = formData.get('pdf');
+  let pdfPath: string | null = null;
+  if (pdfFile instanceof File && pdfFile.size > 0) {
+    pdfPath = await storePdf(pdfFile);
+  }
+
+  createPraktikumDb({
+    modul,
+    judul,
+    deskripsi,
+    pdfPath,
+    gambar,
+  });
+
+  revalidatePath('/praktikum');
+  revalidatePath('/admin');
+}
+
+export async function updatePraktikum(formData: FormData) {
+  await requireAdmin();
+
+  const id = getTextField(formData, 'id');
+  const existing = getPraktikumById(id);
+  if (!existing) {
+    throw new Error('Modul praktikum tidak ditemukan.');
+  }
+
+  const modul = getTextField(formData, 'modul');
+  const judul = getTextField(formData, 'judul');
+  const deskripsi = getTextField(formData, 'deskripsi');
+
+  if (!modul || !judul || !deskripsi) {
+    throw new Error('Modul, judul, dan deskripsi wajib diisi.');
+  }
+
+  let pdfPath = existing.pdfPath;
+  const pdfFile = formData.get('pdf');
+  if (pdfFile instanceof File && pdfFile.size > 0) {
+    const newPdfPath = await storePdf(pdfFile);
+    if (existing.pdfPath) {
+      removeUploadedFile(existing.pdfPath);
+    }
+    pdfPath = newPdfPath;
+  }
+
+  const imageFiles = formData.getAll('gambar');
+  const newImages = await storePracticeImages(imageFiles);
+  const gambar = newImages.length > 0 ? [...existing.gambar, ...newImages] : existing.gambar;
+
+  updatePraktikumDb(id, {
+    modul,
+    judul,
+    deskripsi,
+    pdfPath,
+    gambar,
+  });
+
+  revalidatePath('/praktikum');
+  revalidatePath('/admin');
+}
+
+export async function deletePraktikum(formDataOrId: FormData | string) {
+  await requireAdmin();
+
+  const id = typeof formDataOrId === 'string' ? formDataOrId : getTextField(formDataOrId, 'id');
+  const existing = getPraktikumById(id);
+  if (!existing) {
+    throw new Error('Modul praktikum tidak ditemukan.');
+  }
+
+  if (existing.pdfPath) {
+    removeUploadedFile(existing.pdfPath);
+  }
+  for (const imgPath of existing.gambar) {
+    removeUploadedFile(imgPath);
+  }
+
+  deletePraktikumDb(id);
+
+  revalidatePath('/praktikum');
+  revalidatePath('/admin');
+}
+
+async function storePdf(file: File): Promise<string> {
+  const maxBytes = 20 * 1024 * 1024;
+  if (file.size > maxBytes) {
+    throw new Error('Ukuran file PDF modul maksimal 20 MB.');
+  }
+  const isPdfMime = file.type === 'application/pdf';
+  const hasPdfExt = file.name.toLowerCase().endsWith('.pdf');
+  if (!isPdfMime || !hasPdfExt) {
+    throw new Error('File modul praktikum harus berupa file PDF (.pdf).');
+  }
+
+  const filename = `${crypto.randomUUID()}.pdf`;
+  const relativePath = `/api/files/modules/${filename}`;
+  const outputPath = path.join(process.cwd(), 'data', 'uploads', 'modules', filename);
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+  fs.writeFileSync(outputPath, Buffer.from(await file.arrayBuffer()));
+
+  return relativePath;
+}
+
+async function storePracticeImages(files: FormDataEntryValue[]): Promise<string[]> {
+  const maxBytes = 3 * 1024 * 1024;
+  const savedPaths: string[] = [];
+
+  for (const entry of files) {
+    if (!(entry instanceof File) || entry.size === 0) continue;
+
+    if (entry.size > maxBytes) {
+      throw new Error('Ukuran setiap gambar dokumentasi maksimal 3 MB.');
+    }
+
+    const input = Buffer.from(await entry.arrayBuffer());
+    const image = sharp(input, { failOn: 'error' });
+    const metadata = await image.metadata();
+    if (!metadata.format || !['jpeg', 'png', 'webp'].includes(metadata.format)) {
+      throw new Error('Gambar dokumentasi harus berupa gambar JPEG, PNG, atau WebP.');
+    }
+
+    const filename = `${crypto.randomUUID()}.webp`;
+    const relativePath = `/api/files/practice/${filename}`;
+    const outputPath = path.join(process.cwd(), 'data', 'uploads', 'practice', filename);
+    fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+    await image
+      .rotate()
+      .resize(1400, 1400, { fit: 'inside', withoutEnlargement: true })
+      .webp({ quality: 82 })
+      .toFile(outputPath);
+
+    savedPaths.push(relativePath);
+  }
+
+  return savedPaths;
+}
+
+function removeUploadedFile(fileUrl: string): void {
+  if (!fileUrl.startsWith('/api/files/')) return;
+  const relativePath = fileUrl.replace(/^\/api\/files\//, '');
+  const uploadsDir = path.resolve(process.cwd(), 'data', 'uploads');
+  const fullPath = path.resolve(uploadsDir, relativePath);
+  if (fullPath.startsWith(uploadsDir + path.sep) && fs.existsSync(fullPath)) {
+    try {
+      fs.unlinkSync(fullPath);
+    } catch {
+      // ignore errors
+    }
+  }
 }
