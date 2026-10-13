@@ -5,32 +5,47 @@
       "number": "01",
       "icon": "Network",
       "title": "Network Security",
-      "description": "Analyzing how real networks fail — and what it takes to make them harder to break.",
+      "description": "Exploring network protocols, communication security, and methods for identifying vulnerabilities and detecting threats across computer networks.",
       "tags": [
-        "Network protocols",
-        "Threat detection"
+        "Network Protocols",
+        "Threat Detection",
+        "Network Analysis"
       ]
     },
     {
       "id": "ra-2",
       "number": "02",
-      "icon": "Fingerprint",
-      "title": "Applied Cryptography",
-      "description": "Cryptography that works outside the textbook. Privacy, identity, and authentication in systems people actually use.",
+      "icon": "Lock",
+      "title": "Applied Cryptography & Blockchain",
+      "description": "Studying cryptographic techniques and blockchain technologies to support data confidentiality, integrity, authentication, and secure digital transactions.",
       "tags": [
-        "Privacy",
-        "Authentication"
+        "Cryptography",
+        "Data Security",
+        "Blockchain"
       ]
     },
     {
       "id": "ra-3",
       "number": "03",
-      "icon": "Radio",
-      "title": "Secure Systems",
-      "description": "From embedded devices to web infrastructure — finding where systems break before someone else does.",
+      "icon": "Code",
+      "title": "Programming & Algorithm Design",
+      "description": "Developing software solutions through algorithm design, computational problem-solving, and systematic evaluation of program correctness and efficiency.",
       "tags": [
-        "IoT security",
-        "Systems"
+        "Software Development",
+        "Algorithm Design",
+        "Computational Thinking"
+      ]
+    },
+    {
+      "id": "ra-4",
+      "number": "04",
+      "icon": "Cloud",
+      "title": "Secure Systems & Cloud Computing",
+      "description": "Examining system security and cloud infrastructure, with an emphasis on secure configurations, application protection, and the reliability of digital services.",
+      "tags": [
+        "Cloud Security",
+        "System Hardening",
+        "Secure Applications"
       ]
     }
   ],
@@ -86,6 +101,56 @@
       "color": "bg-[#f3efea] text-[#8c704f]"
     }
   ],
+  "organizationMembers": [
+    {
+      "id": "org-kaur-lab",
+      "group": "kaur",
+      "name": "",
+      "isLeader": true
+    },
+    {
+      "id": "org-laboran",
+      "group": "laboran",
+      "name": "",
+      "isLeader": true
+    },
+    {
+      "id": "org-koordinator",
+      "group": "coordinator",
+      "name": "",
+      "isLeader": true
+    },
+    {
+      "id": "org-sekretaris",
+      "group": "secretary",
+      "name": "",
+      "isLeader": true
+    },
+    {
+      "id": "org-bendahara",
+      "group": "treasurer",
+      "name": "",
+      "isLeader": true
+    },
+    {
+      "id": "org-rnd",
+      "group": "rnd",
+      "name": "",
+      "isLeader": true
+    },
+    {
+      "id": "org-hrd",
+      "group": "hrd",
+      "name": "",
+      "isLeader": true
+    },
+    {
+      "id": "org-media-creative",
+      "group": "media",
+      "name": "",
+      "isLeader": true
+    }
+  ],
   "newsItems": [
     {
       "id": "news-1",
@@ -113,15 +178,6 @@
       "category": "COMMUNITY",
       "title": "Join our student-led introduction to practical network security",
       "href": "mailto:pns-lab@example.edu?subject=Network%20security%20workshop"
-    },
-    {
-      "id": "news-3c8fc3c6-058b-4165-90d6-b605d5ad0e10",
-      "date": "10",
-      "month": "OCT",
-      "year": "2026",
-      "category": "seminar ngopi",
-      "title": "ngopi",
-      "href": "#"
     }
   ]
 }

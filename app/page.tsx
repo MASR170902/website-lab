@@ -9,8 +9,11 @@ import {
   Atom,
   BookOpen,
   Check,
+  Cloud,
+  Code,
   ExternalLink,
   Fingerprint,
+  Lock,
   Network,
   Radio,
   ShieldCheck,
@@ -22,7 +25,7 @@ import { SiteHeader } from "@/components/site-header";
 import { getDb, ORGANIZATION_GROUPS } from "@/lib/db";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const iconMap: Record<string, any> = { Network, Fingerprint, Radio };
+const iconMap: Record<string, any> = { Network, Fingerprint, Radio, Lock, Code, Cloud };
 
 export default async function Home() {
   const db = getDb();
@@ -102,12 +105,12 @@ export default async function Home() {
               </h2>
             </div>
             <div className="md:border-l md:border-slate-200 md:pl-10">
-              <p className="text-[15px] leading-7 text-slate-600">
+              <p className="text-[15px] leading-7 text-slate-600 sm:text-justify text-pretty">
                 PNS Lab is a research laboratory at Telkom University
                 Purwokerto, focused on two things: programming and network
                 security. Not as separate disciplines. As one.
               </p>
-              <p className="mt-4 text-[15px] leading-7 text-slate-600">
+              <p className="mt-4 text-[15px] leading-7 text-slate-600 sm:text-justify text-pretty">
                 The lab exists for a straightforward reason — to produce people
                 who actually understand what they&apos;re doing. Not just
                 students who passed the exam.
@@ -120,12 +123,12 @@ export default async function Home() {
               <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-ocean">
                 What we do
               </span>
-              <p className="mt-4 text-sm leading-7 text-slate-600">
+              <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-justify text-pretty">
                 Research here starts from concrete problems. Infrastructure
                 that hasn&apos;t been hardened. Protocols that need testing.
                 Tools that don&apos;t exist yet but should.
               </p>
-              <p className="mt-3 text-sm leading-7 text-slate-600">
+              <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-justify text-pretty">
                 From there, findings get documented, published, and turned
                 into hands-on learning material. The cycle repeats. That&apos;s
                 how the lab runs.
@@ -135,13 +138,13 @@ export default async function Home() {
               <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-ocean">
                 Our approach
               </span>
-              <p className="mt-4 text-sm leading-7 text-slate-600">
+              <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-justify text-pretty">
                 Members are trained to think like attackers. Not because the
                 lab teaches anything reckless — but because understanding how
                 something breaks is the only honest way to understand how to
                 protect it.
               </p>
-              <p className="mt-3 text-sm leading-7 text-slate-600">
+              <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-justify text-pretty">
                 It&apos;s harder than sitting in a lecture. That&apos;s exactly
                 why people join.
               </p>
@@ -156,15 +159,6 @@ export default async function Home() {
               Meet our community <ArrowRight size={15} />
             </a>
           </div>
-
-          <div className="mt-12 flex flex-col gap-2 border-t border-slate-200 pt-8 sm:flex-row sm:items-end sm:gap-4">
-            <span className="text-5xl font-semibold leading-none tracking-[-0.06em] text-ocean md:text-6xl">
-              23
-            </span>
-            <span className="pb-1 text-xs font-semibold uppercase tracking-[0.15em] text-slate-500">
-              Active members
-            </span>
-          </div>
         </div>
       </section>
 
@@ -172,42 +166,54 @@ export default async function Home() {
         <div className="container-wide">
           <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div>
-              <span className="eyebrow">What we work on</span>
+              <span className="eyebrow">RESEARCH &amp; TECHNICAL FOCUS</span>
               <h2 className="mt-5 text-3xl font-semibold tracking-[-0.04em] text-ink md:text-[42px]">
-                Research areas
+                Research Areas
               </h2>
             </div>
-            <p className="max-w-[390px] text-sm leading-6 text-slate-600">
-              From foundational research to applied solutions, we explore the
-              ideas shaping a more secure digital future.
+            <p className="max-w-[500px] text-sm leading-6 text-slate-600 sm:text-justify text-pretty">
+              From algorithm design to network defense, we explore computing
+              technologies and security principles that support reliable,
+              efficient, and secure digital systems.
             </p>
           </div>
 
-          <div className="mt-12 grid gap-4 md:grid-cols-3">
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
             {researchAreas.map(({ number, icon, title, description, tags }: any) => {
               const Icon = iconMap[icon] || Network;
               return (
-              <article
-                key={title}
-                className="group rounded-2xl border border-slate-200 bg-white p-7 transition-all hover:-translate-y-1 hover:border-[#c6ddd1] hover:shadow-[0_15px_40px_rgba(23,43,58,0.07)]"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#edf5f0] text-ocean">
-                    <Icon size={22} strokeWidth={1.7} />
-                  </span>
-                  <span className="text-xs font-medium tracking-widest text-slate-400">{number}</span>
-                </div>
-                <h3 className="mt-7 text-xl font-semibold tracking-tight text-ink">{title}</h3>
-                <p className="mt-3 min-h-[84px] text-[13px] leading-6 text-slate-600">{description}</p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {tags.map((tag: string) => (
-                    <span key={tag} className="rounded-full bg-slate-100 px-3 py-1.5 text-[10px] font-medium text-slate-600">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </article>
+                <article
+                  key={title}
+                  className="group flex flex-col justify-between rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 transition-all duration-200 hover:-translate-y-1 hover:border-[#c6ddd1] hover:shadow-[0_15px_40px_rgba(23,43,58,0.07)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#edf5f0] text-ocean transition-colors duration-200 group-hover:bg-[#e2f0e8] group-hover:text-leaf">
+                        <Icon size={22} strokeWidth={1.7} />
+                      </span>
+                      <span className="text-xs font-medium tracking-widest text-slate-400">
+                        {number}
+                      </span>
+                    </div>
+                    <h3 className="mt-6 text-lg font-semibold tracking-tight text-ink sm:text-xl">
+                      {title}
+                    </h3>
+                    <p className="mt-3 text-[13px] leading-relaxed text-slate-600">
+                      {description}
+                    </p>
+                  </div>
+                  <div className="mt-6 flex flex-wrap gap-1.5 pt-2">
+                    {tags.map((tag: string) => (
+                      <span
+                        key={tag}
+                        className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-600 transition-colors group-hover:bg-slate-200/70"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </article>
               );
             })}
           </div>
@@ -220,51 +226,65 @@ export default async function Home() {
             <div>
               <span className="eyebrow">Learn by doing</span>
               <h2 className="mt-5 max-w-[500px] text-3xl font-semibold leading-tight tracking-[-0.045em] text-ink md:text-[42px]">
-                Practicum at PNS Lab
+                Explore Technology at PNS Lab
               </h2>
             </div>
-            <p className="max-w-[620px] text-sm leading-7 text-slate-600">
-              Turn concepts in programming and network security into practical
-              skills. The practicum emphasizes learning through guided,
-              hands-on work and a responsible approach to solving real-world
-              technical problems.
+            <p className="max-w-[620px] text-sm leading-7 text-slate-600 sm:text-justify text-pretty">
+              PNS Lab bridges academic knowledge and practical experience across
+              computing, networking, and applied technology. Through hands-on
+              laboratory activities, students develop technical skills,
+              strengthen analytical thinking, and explore how technology can be
+              applied to real-world challenges.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
             {[
               {
                 number: "01",
-                title: "Build practical skills",
+                title: "Software & Computing",
                 description:
-                  "Strengthen your foundations by working through practical programming and networking challenges.",
+                  "Build a strong foundation in programming, algorithms, and cloud computing. Develop problem-solving skills through practical exercises that turn computational concepts into working solutions.",
+                areas: "Programming · Algorithms · Cloud Computing",
               },
               {
                 number: "02",
-                title: "Explore security",
+                title: "Networks, Signals & IoT",
                 description:
-                  "Learn to identify weaknesses and think critically about how systems can be made more secure.",
+                  "Explore computer networks, telecommunications, radio frequency systems, and digital signal processing. Gain practical experience in understanding connected systems, analyzing signals, and exploring IoT and automation technologies.",
+                areas:
+                  "Computer Networks · Telecommunications · Signal Processing · IoT & Automation",
               },
               {
                 number: "03",
-                title: "Learn responsibly",
+                title: "Security & Applied Technologies",
                 description:
-                  "Apply what you learn in a guided environment that values documentation, collaboration, and responsible practice.",
+                  "Discover data security, blockchain, and applied engineering through guided laboratory work. Develop a responsible approach to technology by emphasizing critical thinking, careful experimentation, and technical documentation.",
+                areas:
+                  "Data Security · Blockchain · Biomedical Engineering",
               },
             ].map((item) => (
               <article
                 key={item.number}
-                className="rounded-2xl border border-slate-200 bg-mist p-7"
+                className="flex flex-col justify-between rounded-2xl border border-slate-200 bg-mist p-6 sm:p-7 transition-all duration-200 hover:-translate-y-1 hover:border-[#c6ddd1] hover:shadow-[0_12px_32px_rgba(23,43,58,0.06)] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
               >
-                <span className="text-xs font-medium tracking-widest text-ocean">
-                  {item.number}
-                </span>
-                <h3 className="mt-5 text-lg font-semibold tracking-tight text-ink">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-[13px] leading-6 text-slate-600">
-                  {item.description}
-                </p>
+                <div>
+                  <span className="text-xs font-semibold tracking-widest text-ocean">
+                    {item.number}
+                  </span>
+                  <h3 className="mt-4 text-lg font-semibold tracking-tight text-ink sm:text-xl">
+                    {item.title}
+                  </h3>
+                  <p className="mt-3 text-[13px] leading-relaxed text-slate-600">
+                    {item.description}
+                  </p>
+                </div>
+                <div className="mt-6 border-t border-slate-200/80 pt-4">
+                  <p className="text-xs leading-relaxed text-slate-600">
+                    <span className="font-semibold text-ocean">Areas of practice:</span>{" "}
+                    <span>{item.areas}</span>
+                  </p>
+                </div>
               </article>
             ))}
           </div>
@@ -272,13 +292,13 @@ export default async function Home() {
           <div className="mt-8 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-[#cbe3d6] bg-[#edf6f1] p-6 sm:p-7">
             <div className="max-w-[550px]">
               <span className="text-[10px] font-bold uppercase tracking-[0.16em] text-leaf">
-                Dokumentasi &amp; Modul
+                Documentation &amp; Modules
               </span>
               <h3 className="mt-1 text-lg font-semibold text-ink">
-                Dokumentasi Praktikum PNS Lab
+                PNS Lab Practicum Documentation
               </h3>
               <p className="mt-1 text-xs leading-5 text-slate-600">
-                Akses galeri foto dokumentasi kegiatan laboratorium, rangkuman materi pembelajaran, dan modul panduan resmi.
+                Access photo galleries of laboratory sessions, curriculum summaries, and official module guidebooks.
               </p>
             </div>
             <Link
@@ -286,7 +306,7 @@ export default async function Home() {
               className="inline-flex items-center gap-2 rounded-xl bg-ocean px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#12586e]"
             >
               <BookOpen size={17} />
-              Lihat Dokumentasi Praktikum <ArrowRight size={16} />
+              View Practicum Documentation <ArrowRight size={16} />
             </Link>
           </div>
 
@@ -343,7 +363,7 @@ export default async function Home() {
               <h2 className="mt-5 max-w-[540px] text-3xl font-semibold leading-tight tracking-[-0.045em] text-ink md:text-[42px]">
                 Designing networks that can withstand tomorrow&apos;s threats.
               </h2>
-              <p className="mt-5 max-w-[550px] text-sm leading-7 text-slate-600">
+              <p className="mt-5 max-w-[550px] text-sm leading-7 text-slate-600 sm:text-justify text-pretty">
                 As more of our lives depend on connected systems, the cost of
                 disruption continues to grow. Our group investigates practical
                 ways to detect threats earlier, limit their impact, and help
@@ -430,7 +450,7 @@ export default async function Home() {
                 Lab Leadership
               </h2>
             </div>
-            <p className="max-w-[510px] text-sm leading-7 text-slate-600 md:justify-self-end">
+            <p className="max-w-[510px] text-sm leading-7 text-slate-600 md:justify-self-end sm:text-justify text-pretty">
               Meet the people behind the Programming and Network Security Lab.
               Leadership names and photos are maintained by the lab administrator.
             </p>
@@ -699,7 +719,7 @@ export default async function Home() {
             <h2 className="mt-4 max-w-[610px] text-3xl font-semibold leading-tight tracking-[-0.04em] md:text-[40px]">
               Have a question or an idea to explore?
             </h2>
-            <p className="mt-3 max-w-[680px] text-sm leading-7 text-slate-300">
+            <p className="mt-3 max-w-[680px] text-sm leading-7 text-slate-300 sm:text-justify text-pretty">
               PNS Lab is open to research collaboration, industry partnerships,
               and students who are serious about learning network security
               from the inside out.

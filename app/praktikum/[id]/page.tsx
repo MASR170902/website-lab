@@ -13,7 +13,7 @@ export async function generateMetadata(props: PageProps) {
   const item = getPraktikumById(id);
   if (!item) {
     return {
-      title: "Dokumentasi Tidak Ditemukan - PNS Lab",
+      title: "Documentation Not Found - PNS Lab",
     };
   }
 
@@ -36,7 +36,7 @@ export default async function PraktikumDetailPage(props: PageProps) {
     .map((p) => p.trim())
     .filter(Boolean);
 
-  const formattedDate = new Date(item.createdAt).toLocaleDateString("id-ID", {
+  const formattedDate = new Date(item.createdAt).toLocaleDateString("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -52,7 +52,7 @@ export default async function PraktikumDetailPage(props: PageProps) {
             href="/praktikum"
             className="mb-8 inline-flex items-center gap-2 text-xs font-semibold text-ocean hover:text-leaf transition-colors"
           >
-            <ArrowLeft size={14} /> Kembali ke Dokumentasi Praktikum
+            <ArrowLeft size={14} /> Back to Practicum Documentation
           </Link>
 
           <header className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm md:p-10">
@@ -73,7 +73,7 @@ export default async function PraktikumDetailPage(props: PageProps) {
                   className="inline-flex items-center gap-2 rounded-xl bg-ocean px-5 py-2.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#12586e]"
                 >
                   <FileText size={16} />
-                  Unduh Modul (PDF)
+                  Download Module (PDF)
                 </a>
               )}
             </div>
@@ -84,12 +84,12 @@ export default async function PraktikumDetailPage(props: PageProps) {
 
             <div className="mt-8 space-y-4 border-t border-slate-100 pt-8">
               <h2 className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
-                Deskripsi &amp; Materi Kegiatan
+                Description &amp; Activity Materials
               </h2>
               {paragraphs.map((paragraph, index) => (
                 <p
                   key={index}
-                  className="text-sm leading-7 text-slate-700 md:text-base md:leading-8"
+                  className="text-sm leading-7 text-slate-700 md:text-base md:leading-8 sm:text-justify text-pretty hyphens-auto"
                 >
                   {paragraph}
                 </p>
@@ -100,10 +100,10 @@ export default async function PraktikumDetailPage(props: PageProps) {
               <div className="mt-10 border-t border-slate-100 pt-8">
                 <div className="mb-6 flex items-center justify-between">
                   <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
-                    <Camera size={14} /> Dokumentasi Foto ({item.gambar.length} Foto)
+                    <Camera size={14} /> Photo Documentation ({item.gambar.length} Photos)
                   </h2>
                   <span className="text-[11px] text-slate-400">
-                    Klik foto untuk memperbesar
+                    Click photo to enlarge
                   </span>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -117,7 +117,7 @@ export default async function PraktikumDetailPage(props: PageProps) {
                     >
                       <img
                         src={imgSrc}
-                        alt={`Dokumentasi kegiatan ${item.judul} - foto ke-${imgIdx + 1}`}
+                        alt={`Activity documentation for ${item.judul} - photo ${imgIdx + 1}`}
                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                         loading="lazy"
                       />

@@ -47,7 +47,7 @@ export function SiteHeader() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-slate-100 bg-white">
+    <header className="sticky top-0 z-30 border-b border-slate-100/80 bg-white/75 backdrop-blur-md xl:bg-white">
       <div className="mx-auto flex w-full max-w-[1160px] items-center justify-between px-4 min-[360px]:px-5 sm:px-6 md:px-8 min-h-[64px] py-2 sm:min-h-[72px] sm:py-2.5 xl:h-[78px] xl:min-h-[78px] xl:px-0 xl:py-0">
         <a
           href="/"
@@ -59,6 +59,7 @@ export function SiteHeader() {
             alt="Programming Labs"
             width={120}
             height={61}
+            priority
             className="h-6 w-auto max-w-[48px] shrink-0 object-contain min-[360px]:h-7 min-[360px]:max-w-[56px] sm:h-9 sm:max-w-[76px] md:h-[46px] md:max-w-[88px] xl:h-[54px] xl:max-w-[104px]"
           />
           <span aria-hidden="true" className="h-5 w-px shrink-0 bg-slate-200 min-[360px]:h-6 sm:h-7 md:h-8" />
@@ -67,6 +68,7 @@ export function SiteHeader() {
             alt="Network Security Labs"
             width={120}
             height={74}
+            priority
             className="h-6 w-auto max-w-[40px] shrink-0 object-contain min-[360px]:h-7 min-[360px]:max-w-[48px] sm:h-9 sm:max-w-[64px] md:h-[46px] md:max-w-[78px] xl:h-[54px] xl:max-w-[92px]"
           />
           <span
@@ -123,7 +125,7 @@ export function SiteHeader() {
       {menuOpen && (
         <nav
           aria-label="Mobile navigation"
-          className="absolute left-0 right-0 top-full border-t border-slate-100 bg-white px-5 py-5 shadow-lg xl:hidden"
+          className="absolute left-0 right-0 top-full border-b border-t border-slate-200/50 bg-white/70 backdrop-blur-md px-5 py-5 shadow-xl xl:hidden"
         >
           <div className="mx-auto flex max-w-[560px] flex-col gap-1">
             {navigation.map((item) => {
@@ -137,14 +139,14 @@ export function SiteHeader() {
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
                   aria-current={isActive ? "location" : undefined}
-                  className={`rounded-lg px-3 py-3 text-sm ${
+                  className={`rounded-lg px-3 py-3 text-sm transition-colors ${
                     isContact
-                      ? `mt-2 text-center font-semibold text-white ${
-                          isActive ? "bg-ocean" : "bg-ink"
+                      ? `header-contact-button mt-2 text-center font-semibold !text-white shadow-md ${
+                          isActive ? "ring-2 ring-[#a8e5bd] ring-offset-2" : ""
                         }`
                       : isActive
-                        ? "bg-[#edf5f0] font-semibold text-ocean"
-                        : "font-medium text-slate-700 hover:bg-mist"
+                        ? "bg-ocean/10 font-semibold text-ocean"
+                        : "font-semibold text-slate-900 hover:bg-white/60 hover:text-ocean"
                   }`}
                 >
                   {item.label}

@@ -4,9 +4,9 @@ import { SiteHeader } from "@/components/site-header";
 import { getAllPraktikum } from "@/lib/db";
 
 export const metadata = {
-  title: "Dokumentasi Praktikum - Programming & Network Security Lab",
+  title: "Practicum Documentation - Programming & Network Security Lab",
   description:
-    "Dokumentasi kegiatan praktikum, modul pembelajaran, dan aktivitas laboratorium Programming & Network Security Lab.",
+    "Documentation of laboratory practicum activities, learning modules, and sessions at Programming & Network Security Lab.",
 };
 
 export default function PraktikumPage() {
@@ -22,16 +22,16 @@ export default function PraktikumPage() {
             href="/"
             className="mb-6 inline-flex items-center gap-2 text-xs font-semibold text-ocean hover:text-leaf transition-colors"
           >
-            <ArrowLeft size={14} /> Kembali ke Beranda
+            <ArrowLeft size={14} /> Back to Home
           </Link>
           <div className="max-w-[720px]">
-            <span className="eyebrow">Dokumentasi Kegiatan</span>
+            <span className="eyebrow">Activity Documentation</span>
             <h1 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-ink md:text-5xl">
-              Dokumentasi Praktikum
+              Practicum Documentation
             </h1>
-            <p className="mt-4 text-sm leading-7 text-slate-600 md:text-base">
-              Dokumentasi pelaksanaan kegiatan praktikum, eksplorasi laboratorium,
-              dan materi panduan mahasiswa di Programming &amp; Network Security Lab
+            <p className="mt-4 text-sm leading-7 text-slate-600 md:text-base sm:text-justify text-pretty">
+              Documentation of laboratory practicum activities, hands-on explorations,
+              and student guide materials at the Programming &amp; Network Security Lab,
               Telkom University Purwokerto.
             </p>
           </div>
@@ -45,9 +45,9 @@ export default function PraktikumPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#edf5f0] text-ocean mb-4">
                 <Images size={24} />
               </div>
-              <h3 className="text-base font-semibold text-ink">Belum Ada Dokumentasi Kegiatan</h3>
+              <h3 className="text-base font-semibold text-ink">No Practicum Documentation Yet</h3>
               <p className="mt-1 text-xs text-slate-500 max-w-sm">
-                Dokumentasi kegiatan praktikum akan dipublikasikan oleh administrator lab setelah sesi praktikum selesai.
+                Practicum activity documentation will be published by lab administrators after sessions are completed.
               </p>
             </div>
           ) : (
@@ -74,7 +74,7 @@ export default function PraktikumPage() {
                           />
                           {item.gambar.length > 1 && (
                             <span className="absolute bottom-3 right-3 rounded-lg bg-black/60 px-2 py-1 text-[11px] font-semibold text-white backdrop-blur-sm">
-                              +{item.gambar.length - 1} foto lain
+                              +{item.gambar.length - 1} more photos
                             </span>
                           )}
                         </div>
@@ -87,9 +87,9 @@ export default function PraktikumPage() {
                           </span>
                           <div className="flex items-center gap-2 text-xs text-slate-400">
                             <span className="inline-flex items-center gap-1">
-                              <Camera size={13} /> {item.gambar.length} foto
+                              <Camera size={13} /> {item.gambar.length} photos
                             </span>
-                            {item.pdfPath && <span>• Modul PDF</span>}
+                            {item.pdfPath && <span>• PDF Module</span>}
                           </div>
                         </div>
 
@@ -105,7 +105,7 @@ export default function PraktikumPage() {
 
                     <div className="flex items-center justify-between border-t border-slate-100 px-6 py-4 md:px-7">
                       <span className="text-[11px] font-medium text-slate-400">
-                        {new Date(item.createdAt).toLocaleDateString("id-ID", {
+                        {new Date(item.createdAt).toLocaleDateString("en-US", {
                           day: "numeric",
                           month: "short",
                           year: "numeric",
@@ -115,7 +115,7 @@ export default function PraktikumPage() {
                         href={`/praktikum/${item.id}`}
                         className="inline-flex items-center gap-1.5 rounded-xl bg-ocean px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-[#12586e]"
                       >
-                        Lihat Dokumentasi <ArrowRight size={14} />
+                        View Documentation <ArrowRight size={14} />
                       </Link>
                     </div>
                   </article>
