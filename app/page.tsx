@@ -435,9 +435,6 @@ export default async function Home() {
               </article>
             ))}
           </div>
-          <p className="mt-4 text-[11px] text-slate-400">
-            Publication titles shown as illustrative examples. Contact the lab for the current bibliography.
-          </p>
         </div>
       </section>
 
@@ -704,9 +701,6 @@ export default async function Home() {
               </a>
             ))}
           </div>
-          <p className="mt-4 text-[11px] text-slate-400">
-            Sample news entries — replace with confirmed lab announcements and dates.
-          </p>
         </div>
       </section>
 
