@@ -317,23 +317,39 @@ async function storeOrganizationPhoto(file: File): Promise<string> {
 
   const filename = `${crypto.randomUUID()}.webp`;
   const relativePath = `/uploads/organization/${filename}`;
-  const outputPath = path.join(process.cwd(), 'public', 'uploads', 'organization', filename);
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  await image
+  const publicOutputPath = path.join(process.cwd(), 'public', 'uploads', 'organization', filename);
+  const dataOutputPath = path.join(process.cwd(), 'data', 'uploads', 'organization', filename);
+  fs.mkdirSync(path.dirname(publicOutputPath), { recursive: true });
+  fs.mkdirSync(path.dirname(dataOutputPath), { recursive: true });
+
+  const processedBuffer = await image
     .rotate()
     .resize(512, 512, { fit: 'cover', withoutEnlargement: true })
     .webp({ quality: 84 })
-    .toFile(outputPath);
+    .toBuffer();
+
+  fs.writeFileSync(publicOutputPath, processedBuffer);
+  fs.writeFileSync(dataOutputPath, processedBuffer);
 
   return relativePath;
 }
 
 function removeStoredOrganizationPhoto(photoPath: string): void {
-  if (!/^\/uploads\/organization\/[0-9a-f-]+\.webp$/i.test(photoPath)) {
-    throw new Error('Stored organization photo path is invalid.');
+  if (
+    !/^\/uploads\/organization\/[0-9a-f-]+\.webp$/i.test(photoPath) &&
+    !/^\/api\/files\/organization\/[0-9a-f-]+\.webp$/i.test(photoPath)
+  ) {
+    return;
   }
-  const fullPath = path.join(process.cwd(), 'public', photoPath.slice(1));
-  if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+  const cleanPath = photoPath.replace(/^\/(?:api\/files|uploads)\/organization\//, '');
+  const publicPath = path.join(process.cwd(), 'public', 'uploads', 'organization', cleanPath);
+  if (fs.existsSync(publicPath)) {
+    try { fs.unlinkSync(publicPath); } catch {}
+  }
+  const dataPath = path.join(process.cwd(), 'data', 'uploads', 'organization', cleanPath);
+  if (fs.existsSync(dataPath)) {
+    try { fs.unlinkSync(dataPath); } catch {}
+  }
 }
 
 function getTextField(formData: FormData, name: string): string {

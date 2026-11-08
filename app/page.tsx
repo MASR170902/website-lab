@@ -493,7 +493,7 @@ export default async function Home() {
                   <div className="relative mb-3 h-[76px] w-[76px] rounded-full bg-gradient-to-br from-[#176b87] via-[#50a979] to-[#b7d9c4] p-[3px] shadow-[0_8px_20px_rgba(23,107,135,0.18)]">
                     <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-[#f1f6f4]">
                       {member.photo ? (
-                        <Image src={member.photo} alt={`Foto ${member.name || displayRole}`} fill sizes="76px" className="object-cover" />
+                        <Image src={member.photo} alt={`Foto ${member.name || displayRole}`} fill sizes="76px" className="object-cover" unoptimized />
                       ) : (
                         <UserRound size={34} strokeWidth={1.4} className="text-[#8ba69a]" />
                       )}

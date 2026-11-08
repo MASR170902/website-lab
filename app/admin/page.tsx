@@ -92,7 +92,7 @@ export default async function AdminPage() {
                         <div className="mb-4 flex items-center gap-3">
                           <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-slate-100 shadow-[0_0_0_1px_#d8e2e6,0_0_0_4px_#f1f6f3]">
                             {member.photo ? (
-                              <Image src={member.photo} alt="" width={56} height={56} className="h-full w-full object-cover" />
+                              <Image src={member.photo} alt="" width={56} height={56} className="h-full w-full object-cover" unoptimized />
                             ) : (
                               <span className="text-xs font-semibold text-slate-400">Foto</span>
                             )}

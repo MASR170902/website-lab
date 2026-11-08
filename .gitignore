@@ -12,4 +12,5 @@ data/school.db-shm
 data/school.db-wal
 drizzle/
 data/uploads/
+public/uploads/
 public/*.original.*
