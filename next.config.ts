@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   experimental: {
+    agentUpgrade: "security",
     optimizePackageImports: ["lucide-react"],
     serverActions: {
       bodySizeLimit: "25mb",
