@@ -14,6 +14,13 @@ const globalForDb = globalThis as unknown as {
 export const sqlite = globalForDb.sqlite ?? new Database(dbPath);
 sqlite.pragma('journal_mode = WAL');
 
+try {
+  sqlite.exec('ALTER TABLE organization_members ADD COLUMN role TEXT');
+} catch {}
+try {
+  sqlite.exec('ALTER TABLE organization_members ADD COLUMN group_title TEXT');
+} catch {}
+
 if (process.env.NODE_ENV !== 'production') {
   globalForDb.sqlite = sqlite;
 }

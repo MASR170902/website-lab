@@ -35,6 +35,8 @@ interface JsonOrganizationMember {
   name: string;
   isLeader: boolean;
   photo?: string;
+  role?: string;
+  groupTitle?: string;
 }
 
 interface JsonNewsItem {
@@ -129,6 +131,8 @@ function migrate() {
           name: member.name,
           isLeader: Boolean(member.isLeader),
           photo: member.photo ?? null,
+          role: member.role ?? null,
+          groupTitle: member.groupTitle ?? null,
         }))
       ).run();
     }

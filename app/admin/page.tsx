@@ -52,23 +52,24 @@ export default async function AdminPage() {
         <div className="mb-5">
           <h2 className="text-xl font-semibold">Lab Organization</h2>
           <p className="mt-1 text-sm text-slate-600">
-            Kelola nama dan foto setiap pengurus. Tambahkan anggota Sekretaris,
-            Bendahara, atau divisi; bagan publik akan menyesuaikan jumlah orang.
+            Kelola nama, jabatan/role, dan foto setiap pengurus. Anda dapat menyesuaikan sebutan jabatan (misal: Lab Head, Lab Assistant, Kepala Divisi, dll.) secara fleksibel serta menambah anggota divisi.
           </p>
         </div>
         <div className="space-y-6">
           {organizationGroupOrder.map((group) => {
             const members = db.organizationMembers.filter((member) => member.group === group);
             const canAddMembers = expandableOrganizationGroups.includes(group);
+            const groupTitle = members.find((m) => m.groupTitle)?.groupTitle || ORGANIZATION_GROUPS[group];
+            const sectionTitle = canAddMembers ? groupTitle : (members[0]?.role || ORGANIZATION_GROUPS[group]);
 
             return (
               <section key={group} className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
                   <div>
-                    <h3 className="font-semibold text-ink">{ORGANIZATION_GROUPS[group]}</h3>
+                    <h3 className="font-semibold text-ink text-base">{sectionTitle}</h3>
                     {canAddMembers && (
                       <p className="mt-1 text-xs text-slate-500">
-                        {members.length} orang · satu kepala, anggota lainnya dapat ditambahkan
+                        {members.length} orang · satu kepala/koordinator, anggota lainnya dapat ditambahkan
                       </p>
                     )}
                   </div>
@@ -80,84 +81,119 @@ export default async function AdminPage() {
                   )}
                 </div>
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                  {members.map((member) => (
-                    <article key={member.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                      <div className="mb-4 flex items-center gap-3">
-                        <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-slate-100 shadow-[0_0_0_1px_#d8e2e6,0_0_0_4px_#f1f6f3]">
-                          {member.photo ? (
-                            <Image src={member.photo} alt="" width={56} height={56} className="h-full w-full object-cover" />
-                          ) : (
-                            <span className="text-xs font-semibold text-slate-400">Foto</span>
-                          )}
+                  {members.map((member) => {
+                    const defaultRole = canAddMembers
+                      ? (member.isLeader ? (group === 'secretary' ? 'Lab Secretary' : group === 'treasurer' ? 'Lab Treasurer' : 'Division Lead') : 'Staff')
+                      : ORGANIZATION_GROUPS[group];
+                    const displayRole = member.role || defaultRole;
+
+                    return (
+                      <article key={member.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                        <div className="mb-4 flex items-center gap-3">
+                          <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-white bg-slate-100 shadow-[0_0_0_1px_#d8e2e6,0_0_0_4px_#f1f6f3]">
+                            {member.photo ? (
+                              <Image src={member.photo} alt="" width={56} height={56} className="h-full w-full object-cover" />
+                            ) : (
+                              <span className="text-xs font-semibold text-slate-400">Foto</span>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-ocean">
+                              {displayRole}
+                            </p>
+                            <p className="mt-1 text-sm font-semibold text-ink">{member.name || 'Nama belum diisi'}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-xs font-medium text-ocean">
-                            {member.isLeader ? (group === 'secretary' ? 'Sekretaris Lab' : group === 'treasurer' ? 'Bendahara Lab' : canAddMembers ? 'Kepala Divisi' : ORGANIZATION_GROUPS[group]) : 'Anggota'}
-                          </p>
-                          <p className="mt-1 text-sm font-semibold text-ink">{member.name || 'Nama belum diisi'}</p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-3">
-                        <form action={updateOrganizationMember} className="flex flex-col gap-3">
-                          <input type="hidden" name="id" value={member.id} />
-                          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
-                            Nama pengurus
-                            <input
-                              name="name"
-                              defaultValue={member.name}
-                              maxLength={120}
-                              placeholder="Masukkan nama"
-                              className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-normal text-ink outline-none focus:border-ocean"
-                            />
-                          </label>
-                          {canAddMembers ? (
+                        <div className="flex flex-col gap-3">
+                          <form action={updateOrganizationMember} className="flex flex-col gap-3">
+                            <input type="hidden" name="id" value={member.id} />
                             <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
-                              Jabatan
-                              <select
-                                name="isLeader"
-                                defaultValue={member.isLeader ? 'true' : 'false'}
-                                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-normal text-ink outline-none focus:border-ocean"
-                              >
-                                <option value="true">{group === 'secretary' ? 'Sekretaris Lab' : group === 'treasurer' ? 'Bendahara Lab' : 'Kepala Divisi'}</option>
-                                <option value="false">{group === 'secretary' ? 'Anggota Sekretaris' : group === 'treasurer' ? 'Anggota Bendahara' : 'Anggota Divisi'}</option>
-                              </select>
+                              Nama pengurus
+                              <input
+                                name="name"
+                                defaultValue={member.name}
+                                maxLength={120}
+                                placeholder="Masukkan nama"
+                                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-normal text-ink outline-none focus:border-ocean"
+                              />
                             </label>
-                          ) : (
-                            <input type="hidden" name="isLeader" value="true" />
-                          )}
-                          <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
-                            Foto profil
-                            <input
-                              name="photo"
-                              type="file"
-                              accept="image/jpeg,image/png,image/webp"
-                              className="w-full text-xs text-slate-500 file:mr-3 file:rounded-lg file:border-0 file:bg-[#edf5f0] file:px-3 file:py-2 file:font-semibold file:text-ocean"
-                            />
-                            <span className="font-normal text-slate-400">JPEG, PNG, atau WebP · maks. 3 MB</span>
-                          </label>
-                          <Button type="submit" size="sm" className="self-start">Simpan perubahan</Button>
-                        </form>
-                        <div className="flex flex-wrap gap-4">
-                          {member.photo && (
-                            <form action={removeOrganizationPhoto}>
-                              <input type="hidden" name="id" value={member.id} />
-                              <button type="submit" className="text-xs font-semibold text-slate-600 hover:underline">
-                                Hapus foto
-                              </button>
-                            </form>
-                          )}
-                          {canAddMembers && (
-                            <form action={deleteOrganizationMember}>
-                              <input type="hidden" name="id" value={member.id} />
-                              <button type="submit" className="text-xs font-semibold text-red-600 hover:underline">
-                                Hapus anggota
-                              </button>
-                            </form>
-                          )}
+                            <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+                              Jabatan / Posisi (Label pada kartu)
+                              <input
+                                name="role"
+                                defaultValue={member.role ?? ""}
+                                maxLength={100}
+                                placeholder={`Default: ${defaultRole}`}
+                                className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-normal text-ink outline-none focus:border-ocean"
+                              />
+                              <span className="font-normal text-[11px] text-slate-400">
+                                Kosongkan jika ingin memakai default ({defaultRole})
+                              </span>
+                            </label>
+                            {canAddMembers ? (
+                              <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+                                Posisi pada bagan
+                                <select
+                                  name="isLeader"
+                                  defaultValue={member.isLeader ? 'true' : 'false'}
+                                  className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-normal text-ink outline-none focus:border-ocean"
+                                >
+                                  <option value="true">Kepala / Koordinator Divisi (Posisi Utama)</option>
+                                  <option value="false">Anggota Divisi / Staff</option>
+                                </select>
+                              </label>
+                            ) : (
+                              <input type="hidden" name="isLeader" value="true" />
+                            )}
+                            {canAddMembers && member.isLeader && (
+                              <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+                                Nama Divisi / Grup (Judul kotak bagan)
+                                <input
+                                  name="groupTitle"
+                                  defaultValue={member.groupTitle ?? ""}
+                                  maxLength={100}
+                                  placeholder={`Default: ${ORGANIZATION_GROUPS[group]}`}
+                                  className="rounded-lg border border-slate-200 px-3 py-2 text-sm font-normal text-ink outline-none focus:border-ocean"
+                                />
+                                <span className="font-normal text-[11px] text-slate-400">
+                                  Judul kotak divisi di bagan (saat ini: {groupTitle})
+                                </span>
+                              </label>
+                            )}
+                            <label className="flex flex-col gap-1 text-xs font-medium text-slate-600">
+                              Foto profil
+                              <input
+                                name="photo"
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                className="w-full text-xs text-slate-500 file:mr-3 file:rounded-lg file:border-0 file:bg-[#edf5f0] file:px-3 file:py-2 file:font-semibold file:text-ocean"
+                              />
+                              <span className="font-normal text-slate-400">JPEG, PNG, atau WebP · maks. 3 MB</span>
+                            </label>
+                            <Button type="submit" size="sm" className="self-start mt-1">Simpan perubahan</Button>
+                          </form>
+                          <div className="flex flex-wrap gap-4 mt-1">
+                            {member.photo && (
+                              <form action={removeOrganizationPhoto}>
+                                <input type="hidden" name="id" value={member.id} />
+                                <button type="submit" className="text-xs font-semibold text-slate-600 hover:underline">
+                                  Hapus foto
+                                </button>
+                              </form>
+                            )}
+                            {canAddMembers && (
+                              <form action={deleteOrganizationMember}>
+                                <input type="hidden" name="id" value={member.id} />
+                                <button type="submit" className="text-xs font-semibold text-red-600 hover:underline">
+                                  Hapus anggota
+                                </button>
+                              </form>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </article>
-                  ))}
+                      </article>
+                    );
+                  })}
                 </div>
               </section>
             );

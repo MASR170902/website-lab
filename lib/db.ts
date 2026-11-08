@@ -28,6 +28,8 @@ export interface OrganizationMember {
   name: string;
   isLeader: boolean;
   photo?: string;
+  role?: string;
+  groupTitle?: string;
 }
 
 export interface Praktikum {
@@ -234,6 +236,8 @@ export function getDb(): LabDatabase {
     name: row.name,
     isLeader: Boolean(row.isLeader),
     ...(row.photo ? { photo: row.photo } : {}),
+    ...(row.role ? { role: row.role } : {}),
+    ...(row.groupTitle ? { groupTitle: row.groupTitle } : {}),
   }));
 
   const newsItems: NewsItem[] = rawNews.map((row) => ({
@@ -316,6 +320,8 @@ export function saveDb(data: LabDatabase): void {
             name: item.name,
             isLeader: Boolean(item.isLeader),
             photo: item.photo ?? null,
+            role: item.role ?? null,
+            groupTitle: item.groupTitle ?? null,
           }))
         ).run();
       }

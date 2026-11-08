@@ -469,40 +469,45 @@ export default async function Home() {
             const renderPerson = (
               member: (typeof organizationMembers)[number],
               group: keyof typeof groups,
-            ) => (
-              <article
-                key={member.id}
-                className="flex w-[178px] shrink-0 flex-col items-center rounded-xl border border-slate-200 bg-white px-4 pb-4 pt-5 text-center shadow-[0_5px_18px_rgba(23,43,58,0.05)] transition-all hover:-translate-y-1 hover:border-[#bddbc9] hover:shadow-[0_10px_24px_rgba(23,43,58,0.1)]"
-              >
-                <div className="relative mb-3 h-[76px] w-[76px] rounded-full bg-gradient-to-br from-[#176b87] via-[#50a979] to-[#b7d9c4] p-[3px] shadow-[0_8px_20px_rgba(23,107,135,0.18)]">
-                  <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-[#f1f6f4]">
-                    {member.photo ? (
-                      <Image src={member.photo} alt={`Foto ${member.name || ORGANIZATION_GROUPS[group]}`} fill sizes="76px" className="object-cover" />
-                    ) : (
-                      <UserRound size={34} strokeWidth={1.4} className="text-[#8ba69a]" />
-                    )}
+            ) => {
+              const defaultRole = member.isLeader
+                ? group === "secretary"
+                  ? "Lab Secretary"
+                  : group === "treasurer"
+                    ? "Lab Treasurer"
+                    : ["rnd", "hrd", "media"].includes(group)
+                      ? "Division Lead"
+                      : ORGANIZATION_GROUPS[group]
+                : group === "secretary"
+                  ? "Secretariat Member"
+                  : group === "treasurer"
+                    ? "Treasury Member"
+                    : "STAFF";
+              const displayRole = member.role || defaultRole;
+
+              return (
+                <article
+                  key={member.id}
+                  className="flex w-[178px] shrink-0 flex-col items-center rounded-xl border border-slate-200 bg-white px-4 pb-4 pt-5 text-center shadow-[0_5px_18px_rgba(23,43,58,0.05)] transition-all hover:-translate-y-1 hover:border-[#bddbc9] hover:shadow-[0_10px_24px_rgba(23,43,58,0.1)]"
+                >
+                  <div className="relative mb-3 h-[76px] w-[76px] rounded-full bg-gradient-to-br from-[#176b87] via-[#50a979] to-[#b7d9c4] p-[3px] shadow-[0_8px_20px_rgba(23,107,135,0.18)]">
+                    <div className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-[#f1f6f4]">
+                      {member.photo ? (
+                        <Image src={member.photo} alt={`Foto ${member.name || displayRole}`} fill sizes="76px" className="object-cover" />
+                      ) : (
+                        <UserRound size={34} strokeWidth={1.4} className="text-[#8ba69a]" />
+                      )}
+                    </div>
                   </div>
-                </div>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ocean">
-                  {member.isLeader
-                    ? group === "secretary"
-                      ? "Lab Secretary"
-                      : group === "treasurer"
-                        ? "Lab Treasurer"
-                        : ["rnd", "hrd", "media"].includes(group)
-                          ? "Division Lead"
-                          : ORGANIZATION_GROUPS[group]
-                    : group === "secretary"
-                      ? "Secretariat Member"
-                      : group === "treasurer"
-                        ? "Treasury Member"
-                        : "STAFF"}
-                </p>
-                <p className={`mt-1 text-xs leading-5 ${member.name ? "text-slate-600" : "text-slate-400"}`}>
-                  {member.name || "Member name"}
-                </p>
-              </article>
-            );
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-ocean">
+                    {displayRole}
+                  </p>
+                  <p className={`mt-1 text-xs leading-5 ${member.name ? "text-slate-600" : "text-slate-400"}`}>
+                    {member.name || "Member name"}
+                  </p>
+                </article>
+              );
+            };
             const groupWidths = (
               lists: (typeof organizationMembers)[],
             ) =>
@@ -517,6 +522,7 @@ export default async function Home() {
               const leader = sortedMembers.find((member) => member.isLeader);
               const staff = sortedMembers.filter((member) => !member.isLeader);
               const hasStaffTree = ["rnd", "hrd", "media"].includes(group);
+              const groupTitle = leader?.groupTitle || members.find((m) => m.groupTitle)?.groupTitle || ORGANIZATION_GROUPS[group];
 
               return (
                 <section
@@ -524,7 +530,7 @@ export default async function Home() {
                   style={{ width: groupWidths([members])[0] }}
                 >
                   <h3 className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.08em] text-ink">
-                    {ORGANIZATION_GROUPS[group]}
+                    {groupTitle}
                   </h3>
                   {hasStaffTree ? (
                     <div className="flex flex-col items-center">

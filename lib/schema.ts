@@ -32,6 +32,8 @@ export const organizationMembers = sqliteTable('organization_members', {
   name: text('name').notNull(),
   isLeader: integer('is_leader', { mode: 'boolean' }).notNull(),
   photo: text('photo'),
+  role: text('role'),
+  groupTitle: text('group_title'),
 });
 
 export const newsItems = sqliteTable('news_items', {

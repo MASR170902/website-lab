@@ -168,10 +168,23 @@ export async function updateOrganizationMember(formData: FormData) {
     throw new Error('Organization photo must be an image file.');
   }
 
+  const roleRaw = formData.get('role');
+  const role = typeof roleRaw === 'string' ? roleRaw.trim().slice(0, 100) : undefined;
+  const groupTitleRaw = formData.get('groupTitle');
+  const groupTitle = typeof groupTitleRaw === 'string' ? groupTitleRaw.trim().slice(0, 100) : undefined;
+
   const previousPhoto = member.photo;
   const wasLeader = member.isLeader;
   member.name = name;
   member.isLeader = isLeader;
+  member.role = role || undefined;
+  if (groupTitle !== undefined) {
+    for (const other of db.organizationMembers) {
+      if (other.group === member.group) {
+        other.groupTitle = groupTitle || undefined;
+      }
+    }
+  }
   if (newPhotoPath) member.photo = newPhotoPath;
 
   try {
@@ -213,11 +226,13 @@ export async function addOrganizationMember(formData: FormData) {
   }
 
   const db = getDb();
+  const existingGroupMember = db.organizationMembers.find((item) => item.group === groupValue && item.groupTitle);
   db.organizationMembers.push({
     id: `org-${crypto.randomUUID()}`,
     group: groupValue,
     name: '',
     isLeader: false,
+    groupTitle: existingGroupMember?.groupTitle,
   });
   saveDb(db);
   revalidatePath('/');
